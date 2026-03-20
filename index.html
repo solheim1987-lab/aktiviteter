@@ -479,6 +479,46 @@
     }
     .basis-tip strong { display: block; margin-bottom: 2px; }
 
+    .ressurs-seksjon {
+      margin-top: 14px;
+      border-top: 1px solid #f0ece4;
+      padding-top: 12px;
+    }
+    .ressurs-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #aaa;
+      margin-bottom: 8px;
+    }
+    .ressurs-lenker {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+    .ressurs-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 20px;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+    }
+    .ressurs-btn-yt {
+      background: #ff0000;
+      color: white;
+    }
+    .ressurs-btn-web {
+      background: #f0f0f0;
+      color: #333;
+    }
+    .ressurs-btn:active { opacity: 0.8; }
+
     .filter-btn-rp { border-color: #c4b5fd; color: #c4b5fd; }
     .filter-btn-rp.active { background: #c4b5fd; color: #1a1a1a; border-color: #c4b5fd; }
 
@@ -1088,7 +1128,12 @@ const basisKategorier = [
       "Avtal et «stopp-sted» – et tydelig punkt alle vet de skal samles ved hvis noen blir borte",
       "Ha med: ekstra klær, plaster, mat og vann, mobiltelefon, kart eller kjennskap til området"
     ],
-    tips: { tittel: "Godt råd", tekst: "Gå ruten selv i forkant første gang – finn naturlige stopppunkter, vurder terreng og identifiser eventuelle farer." }
+    tips: { tittel: "Godt råd", tekst: "Gå ruten selv i forkant første gang – finn naturlige stoppunkter, vurder terreng og identifiser eventuelle farer." },
+    ressurser: [
+      { type: "yt", tekst: "Søk: turer med barn friluftsliv", url: "https://www.youtube.com/results?search_query=turer+med+barn+friluftsliv+barnehage" },
+      { type: "web", tekst: "Friluftsrådenes idéperm", url: "https://www.friluftsrad.no/arbeidsomrader/skole-og-barnehage/undervisningsideer/barnehage/idepermen-barn-i-friluft" },
+      { type: "web", tekst: "Norsk Friluftsliv – tips", url: "https://norskfriluftsliv.no/tips-og-inspirasjon/tips-til-uteaktiviteter-for-barn-og-voksne" }
+    ]
   },
   {
     icon: "🔥",
@@ -1100,9 +1145,14 @@ const basisKategorier = [
       "Ha alltid vann eller sand klar for slukking før dere tenner",
       "La barna delta trygt: samle kvister, stable opp – alltid med voksen tett på",
       "Aldri la barna alene ved et tent bål – ikke engang et øyeblikk",
-      "Slukk grundig: rør rundt med pinne og vann til asken er kald og kall den trygg"
+      "Slukk grundig: rør rundt med pinne og vann til asken er kald"
     ],
-    tips: { tittel: "Med de minste", tekst: "For 1–2-åringer er det å se på og kjenne varmen fra trygg avstand en rik opplevelse i seg selv. Ikke press deltakelse." }
+    tips: { tittel: "Med de minste", tekst: "For 1–2-åringer er det å se på og kjenne varmen fra trygg avstand en rik opplevelse i seg selv. Ikke press deltakelse." },
+    ressurser: [
+      { type: "yt", tekst: "Søk: hvordan tenne bål riktig", url: "https://www.youtube.com/results?search_query=hvordan+tenne+b%C3%A5l+riktig+natur" },
+      { type: "web", tekst: "Friute.no – bålfyring (med videoer)", url: "https://friute.no/a-tenne-et-bal-enkel-balfyring/" },
+      { type: "web", tekst: "Miljødirektoratet – bålregler", url: "https://www.miljodirektoratet.no/ansvarsomrader/friluftsliv/friluftsliv-og-allemannsretten/tenne-bal/" }
+    ]
   },
   {
     icon: "🍳",
@@ -1115,7 +1165,12 @@ const basisKategorier = [
       "La barna medvirke: forme brøddeigen, røre i gryta, pakke maten sin",
       "Mat smaker alltid bedre ute – bruk det bevisst som motivasjon for turen"
     ],
-    tips: { tittel: "Kobling til Rammeplan", tekst: "Matlaging ute er direkte knyttet til målet om 'innsikt i matens opprinnelse og veien fra mat til måltid' – og skaperglede." }
+    tips: { tittel: "Kobling til Rammeplan", tekst: "Matlaging ute er direkte knyttet til målet om «innsikt i matens opprinnelse og veien fra mat til måltid» – og skaperglede." },
+    ressurser: [
+      { type: "yt", tekst: "Søk: pinnebrød og matlaging ute barn", url: "https://www.youtube.com/results?search_query=pinnebr%C3%B8d+matlaging+ute+barn" },
+      { type: "web", tekst: "Matjungelen – matlaging i barnehage", url: "https://barnehage.matjungelen.no/tema/matlaging/" },
+      { type: "web", tekst: "Espira – mat på bålet", url: "https://espira.no/bevegelse/best-mat-pa-balet" }
+    ]
   },
   {
     icon: "🩹",
@@ -1126,10 +1181,15 @@ const basisKategorier = [
       "Sår og skrubbsår: skyll godt med vann, tørk og legg plaster – ro og anerkjennelse virker",
       "Fall og støt: vurder bevegelse og smertenivå – ring 113 ved mistanke om skade",
       "Insektstikk: fjern brodden med neglen (ikke klyp), avkjøl med kaldt vann",
-      "Ukjente planter og bær: lær barna regelen – spiser vi aldri noe vi ikke kjenner",
+      "Ukjente planter og bær: lær barna regelen – vi spiser aldri noe vi ikke kjenner",
       "Kjenn barna godt: hvem har allergier, hvem er medisinert, hvem er redd for noe"
     ],
-    tips: { tittel: "Viktig rutine", tekst: "Gå gjennom en enkel sikkerhetsbriefing med barna før hver tur: hvem vi er med, hva vi gjør hvis noen blir borte, og stopp-stedet." }
+    tips: { tittel: "Viktig rutine", tekst: "Gå gjennom en enkel sikkerhetsbriefing med barna før hver tur: hvem vi er med, hva vi gjør hvis noen blir borte, og stopp-stedet." },
+    ressurser: [
+      { type: "yt", tekst: "Søk: førstehjelp barn norsk", url: "https://www.youtube.com/results?search_query=f%C3%B8rstehjelp+barn+norsk+kurs" },
+      { type: "web", tekst: "Røde Kors – kurs for barn", url: "https://www.rodekorsforstehjelp.no/produkter/forstehjelpskurs-barn-15-time-onlinekurs-lsfhkb/" },
+      { type: "web", tekst: "Naturens som læringsarena – sikkerhet", url: "https://naturensomlaeringsarena.no/%C3%A5rshjul-for-uteskole/f%C3%B8rstehjelp" }
+    ]
   },
   {
     icon: "🧥",
@@ -1142,7 +1202,11 @@ const basisKategorier = [
       "Sommer: solkrem (minimum SPF 30) og solhatt er obligatorisk på solrike dager",
       "Skotøy: gummistøvler for sølete dager, støvler med god støtte og gummisåle for skog og terreng"
     ],
-    tips: { tittel: "Praktisk tips", tekst: "Merk alltid barneklærne tydelig med navn – spesielt ekstrasettene. Det sparer mye tid og frustrasjon." }
+    tips: { tittel: "Praktisk tips", tekst: "Merk alltid barneklærne tydelig med navn – spesielt ekstrasettene. Det sparer mye tid og frustrasjon." },
+    ressurser: [
+      { type: "yt", tekst: "Søk: lagprinsippet påkledning friluftsliv", url: "https://www.youtube.com/results?search_query=lagprinsippet+p%C3%A5kledning+friluftsliv+barn" },
+      { type: "web", tekst: "Norsk Friluftsliv – vinteraktiviteter", url: "https://norskfriluftsliv.no/tips-og-inspirasjon/10-morsomme-vinteraktiviteter-med-barn" }
+    ]
   },
   {
     icon: "🌿",
@@ -1155,7 +1219,12 @@ const basisKategorier = [
       "Bruk sansene aktivt: lukt på jord og mose, kjenn på bark, lytt etter fugler",
       "La barna styre utforskningen – følg barnas nysgjerrighet fremfor egne planer"
     ],
-    tips: { tittel: "Kobling til Rammeplan", tekst: "Naturkunnskap er bro mellom fagområdene Natur, miljø og teknologi og Kropp, bevegelse, mat og helse." }
+    tips: { tittel: "Kobling til Rammeplan", tekst: "Naturkunnskap er bro mellom fagområdene Natur, miljø og teknologi og Kropp, bevegelse, mat og helse." },
+    ressurser: [
+      { type: "yt", tekst: "Søk: natur og friluftsliv barnehage", url: "https://www.youtube.com/results?search_query=natur+friluftsliv+barnehage+pedagogikk" },
+      { type: "web", tekst: "Forskerfrø – friluftsliv", url: "https://www.xn--forskerfr-t8a.no/artikkel/vis.html?tid=2243242" },
+      { type: "web", tekst: "Friluftsrådenes Landsforbund", url: "https://www.friluftsrad.no/arbeidsomrader/skole-og-barnehage/laering-i-friluft" }
+    ]
   }
 ];
 
@@ -1181,6 +1250,16 @@ function renderBasis() {
           ${kat.punkter.map(p => `<li><span class="dot">●</span><span>${p}</span></li>`).join("")}
         </ul>
         ${kat.tips ? `<div class="basis-tip"><strong>${kat.tips.tittel}</strong>${kat.tips.tekst}</div>` : ""}
+        ${kat.ressurser && kat.ressurser.length ? `
+          <div class="ressurs-seksjon">
+            <div class="ressurs-label">Lær mer</div>
+            <div class="ressurs-lenker">
+              ${kat.ressurser.map(r => `
+                <a href="${r.url}" target="_blank" rel="noopener" class="ressurs-btn ${r.type === 'yt' ? 'ressurs-btn-yt' : 'ressurs-btn-web'}">
+                  ${r.type === 'yt' ? '▶ ' : '🔗 '}${r.tekst}
+                </a>`).join("")}
+            </div>
+          </div>` : ""}
       </div>`;
     container.appendChild(div);
   });
