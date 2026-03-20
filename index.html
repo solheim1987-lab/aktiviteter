@@ -4,6 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Natur, helse og bevegelse</title>
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#2e7d5e" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="Aktiviteter" />
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -14,642 +18,359 @@
       min-height: 100vh;
     }
 
+    /* ── Header ──────────────────────────────────── */
     header {
       background: #2e7d5e;
       color: white;
-      padding: 20px 16px 16px;
-      text-align: center;
-    }
-    header h1 { font-size: 1.4rem; font-weight: 700; }
-    header p { margin-top: 4px; font-size: 0.88rem; opacity: 0.85; }
-
-    .filter-bar {
-      background: #2e7d5e;
-      padding: 0 16px 16px;
-      display: flex;
-      gap: 8px;
-      justify-content: center;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-
-    .filter-btn {
-      border: 2px solid rgba(255,255,255,0.5);
-      background: transparent;
-      color: white;
-      border-radius: 30px;
-      padding: 7px 18px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.18s, border-color 0.18s;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .filter-btn.active {
-      background: white;
-      color: #2e7d5e;
-      border-color: white;
-    }
-
-    .filter-divider {
-      width: 1px;
-      height: 28px;
-      background: rgba(255,255,255,0.3);
-      flex-shrink: 0;
-    }
-
-    .filter-btn-voksne {
-      border-color: #ffd166;
-      color: #ffd166;
-    }
-    .filter-btn-voksne.active {
-      background: #ffd166;
-      color: #1a1a1a;
-      border-color: #ffd166;
-    }
-
-    main {
-      max-width: 640px;
-      margin: 0 auto;
-      padding: 20px 16px 48px;
-    }
-
-    /* ── Aktivitetskort ─────────────────────────── */
-
-    .age-section { margin-bottom: 8px; }
-
-    .age-heading {
-      font-size: 0.78rem;
-      font-weight: 700;
-      letter-spacing: 0.07em;
-      text-transform: uppercase;
-      color: #2e7d5e;
-      margin-bottom: 12px;
-      padding-left: 4px;
-    }
-
-    .activity-card {
-      background: white;
-      border-radius: 14px;
-      margin-bottom: 14px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-      overflow: hidden;
-    }
-
-    .card-header {
+      padding: 16px 16px 12px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 16px 16px 14px;
-      cursor: pointer;
-      user-select: none;
-      -webkit-tap-highlight-color: transparent;
       gap: 10px;
     }
-    .card-header:active { background: #f8f8f8; }
+    .header-left h1 { font-size: 1.2rem; font-weight: 700; }
+    .header-left p  { font-size: 0.78rem; opacity: 0.8; margin-top: 2px; }
+    .random-btn {
+      flex-shrink: 0;
+      background: rgba(255,255,255,0.2);
+      border: 2px solid rgba(255,255,255,0.5);
+      color: white;
+      border-radius: 30px;
+      padding: 7px 13px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .random-btn:active { background: rgba(255,255,255,0.35); }
 
-    .card-left {
+    /* ── Filter bar ──────────────────────────────── */
+    .filter-bar {
+      background: #2e7d5e;
+      padding: 0 16px 14px;
       display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
       align-items: center;
-      gap: 12px;
-      flex: 1;
-      min-width: 0;
     }
-
-    .card-icon { font-size: 1.8rem; flex-shrink: 0; }
-
-    .card-name {
-      font-size: 1.05rem;
+    .filter-btn {
+      border: 2px solid rgba(255,255,255,0.45);
+      background: transparent;
+      color: white;
+      border-radius: 30px;
+      padding: 6px 15px;
+      font-size: 0.85rem;
       font-weight: 600;
-      color: #1a1a1a;
+      cursor: pointer;
+      transition: background 0.15s;
+      -webkit-tap-highlight-color: transparent;
     }
+    .filter-btn.active { background: white; color: #2e7d5e; border-color: white; }
+    .filter-divider { width: 1px; height: 26px; background: rgba(255,255,255,0.25); flex-shrink: 0; }
+    .filter-btn-voksne  { border-color: #ffd166; color: #ffd166; }
+    .filter-btn-voksne.active  { background: #ffd166; color: #1a1a1a; border-color: #ffd166; }
+    .filter-btn-rp      { border-color: #c4b5fd; color: #c4b5fd; }
+    .filter-btn-rp.active      { background: #c4b5fd; color: #1a1a1a; border-color: #c4b5fd; }
+    .filter-btn-basis   { border-color: #fdba74; color: #fdba74; }
+    .filter-btn-basis.active   { background: #fdba74; color: #1a1a1a; border-color: #fdba74; }
+    .filter-btn-insp    { border-color: #6ee7b7; color: #6ee7b7; }
+    .filter-btn-insp.active    { background: #6ee7b7; color: #1a1a1a; border-color: #6ee7b7; }
+    .filter-btn-fav     { border-color: #fca5a5; color: #fca5a5; }
+    .filter-btn-fav.active     { background: #fca5a5; color: #1a1a1a; border-color: #fca5a5; }
 
-    .tag-row {
+    /* ── Search bar ──────────────────────────────── */
+    .search-bar {
+      background: #256b50;
+      padding: 0 16px 14px;
+    }
+    .search-input {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 30px;
+      border: none;
+      font-size: 0.92rem;
+      background: rgba(255,255,255,0.15);
+      color: white;
+      outline: none;
+    }
+    .search-input::placeholder { color: rgba(255,255,255,0.6); }
+    .search-input:focus { background: rgba(255,255,255,0.25); }
+
+    /* ── RP tag filter ───────────────────────────── */
+    .rp-tag-bar {
+      background: #f0f7f4;
+      padding: 10px 16px 2px;
       display: flex;
       gap: 6px;
       flex-wrap: wrap;
-      margin-top: 5px;
     }
-
-    .tag {
-      display: inline-block;
-      font-size: 0.7rem;
+    .rp-filter-tag {
+      font-size: 0.72rem;
       font-weight: 700;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      padding: 2px 8px;
+      padding: 4px 11px;
       border-radius: 20px;
+      background: white;
+      color: #5c35a8;
+      border: 1.5px solid #ddd0f7;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .rp-filter-tag.active { background: #5c35a8; color: white; border-color: #5c35a8; }
+
+    /* ── Main ────────────────────────────────────── */
+    main { max-width: 640px; margin: 0 auto; padding: 16px 16px 60px; }
+
+    /* ── Activity cards ──────────────────────────── */
+    .age-section { margin-bottom: 6px; }
+    .age-heading {
+      font-size: 0.74rem; font-weight: 700; letter-spacing: 0.07em;
+      text-transform: uppercase; color: #2e7d5e; margin-bottom: 10px; padding-left: 2px;
+    }
+    .activity-card {
+      background: white; border-radius: 14px; margin-bottom: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07); overflow: hidden;
+    }
+    .card-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 14px 12px; cursor: pointer; user-select: none;
+      -webkit-tap-highlight-color: transparent; gap: 8px;
+    }
+    .card-header:active { background: #f8f8f8; }
+    .card-left { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+    .card-icon { font-size: 1.7rem; flex-shrink: 0; }
+    .card-name { font-size: 1rem; font-weight: 600; color: #1a1a1a; }
+    .tag-row { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 4px; }
+    .tag {
+      display: inline-block; font-size: 0.68rem; font-weight: 700;
+      letter-spacing: 0.04em; text-transform: uppercase; padding: 2px 7px; border-radius: 20px;
     }
     .tag-age  { background: #fff3cd; color: #856404; }
     .tag-inne { background: #e0eaff; color: #2a4db5; }
     .tag-skog { background: #d4edda; color: #1a5c2e; }
-
-    .rammeplan-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 14px;
+    .card-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+    .fav-btn {
+      background: none; border: none; font-size: 1.3rem; cursor: pointer;
+      padding: 2px; line-height: 1; -webkit-tap-highlight-color: transparent;
     }
-    .tag-rp {
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.03em;
-      padding: 3px 9px;
-      border-radius: 20px;
-      background: #f3eeff;
-      color: #5c35a8;
-      border: 1px solid #ddd0f7;
-    }
-    .rp-label {
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: #5c35a8;
-      margin-top: 14px;
-      display: block;
-    }
-
     .chevron {
-      width: 20px;
-      height: 20px;
-      flex-shrink: 0;
-      color: #aaa;
-      transition: transform 0.25s ease;
+      width: 18px; height: 18px; flex-shrink: 0; color: #bbb;
+      transition: transform 0.22s ease;
     }
     .chevron.open { transform: rotate(180deg); }
 
-    .card-body {
-      display: none;
-      padding: 0 16px 20px;
-      border-top: 1px solid #f0f0f0;
-    }
+    .card-body { display: none; padding: 0 14px 18px; border-top: 1px solid #f0f0f0; }
     .card-body.open { display: block; }
+    .description { font-size: 0.91rem; line-height: 1.65; color: #444; margin-top: 12px; }
 
-    .description {
-      font-size: 0.93rem;
-      line-height: 1.65;
-      color: #444;
-      margin-top: 14px;
+    /* Rammeplan tags in card */
+    .rammeplan-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 12px; }
+    .tag-rp {
+      font-size: 0.68rem; font-weight: 700; padding: 3px 8px; border-radius: 20px;
+      background: #f3eeff; color: #5c35a8; border: 1px solid #ddd0f7;
+    }
+    .rp-label {
+      font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em;
+      text-transform: uppercase; color: #5c35a8; margin-top: 12px; display: block;
     }
 
-    .questions-heading {
-      margin-top: 18px;
-      font-size: 0.74rem;
-      font-weight: 700;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: #2e7d5e;
-    }
-
-    .questions-list {
-      margin-top: 10px;
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .questions-list li {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      background: #f0f7f4;
-      border-radius: 10px;
-      padding: 11px 13px;
-      font-size: 0.88rem;
-      line-height: 1.55;
-      color: #333;
-    }
-
-    .q-num {
-      font-weight: 700;
-      color: #2e7d5e;
-      flex-shrink: 0;
-      min-width: 18px;
-    }
-
+    /* Video */
     .video-wrapper {
-      position: relative;
-      padding-bottom: 56.25%;
-      height: 0;
-      overflow: hidden;
-      border-radius: 10px;
-      margin-top: 16px;
-      background: #000;
+      position: relative; padding-bottom: 56.25%; height: 0;
+      overflow: hidden; border-radius: 10px; margin-top: 14px; background: #000;
     }
     .video-wrapper iframe {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      border: none;
-      border-radius: 10px;
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      border: none; border-radius: 10px;
     }
-
     .video-placeholder {
-      margin-top: 16px;
-      border: 2px dashed #d0e8dc;
-      border-radius: 10px;
-      padding: 14px;
-      text-align: center;
-      color: #aaa;
-      font-size: 0.82rem;
+      margin-top: 14px; border: 2px dashed #d0e8dc; border-radius: 10px;
+      padding: 12px; text-align: center; color: #bbb; font-size: 0.8rem;
     }
 
+    /* Questions */
+    .questions-heading {
+      margin-top: 16px; font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.06em; text-transform: uppercase; color: #2e7d5e;
+    }
+    .questions-list { margin-top: 8px; list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .questions-list li {
+      display: flex; align-items: flex-start; gap: 9px;
+      background: #f0f7f4; border-radius: 10px; padding: 10px 12px;
+      font-size: 0.86rem; line-height: 1.5; color: #333;
+    }
+    .q-num { font-weight: 700; color: #2e7d5e; flex-shrink: 0; min-width: 16px; }
+
+    /* Card action buttons */
+    .card-action-row {
+      display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap;
+    }
+    .card-action-btn {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 0.78rem; font-weight: 600; padding: 7px 13px;
+      border-radius: 20px; border: none; cursor: pointer;
+      -webkit-tap-highlight-color: transparent; text-decoration: none;
+    }
+    .btn-share { background: #e0eaff; color: #2a4db5; }
+    .btn-print { background: #f0f0f0; color: #444; }
+    .btn-share:active, .btn-print:active { opacity: 0.75; }
+
+    /* Reflection log */
+    .reflection-section { margin-top: 14px; }
+    .reflection-label {
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em;
+      text-transform: uppercase; color: #888; margin-bottom: 6px; display: block;
+    }
+    .reflection-textarea {
+      width: 100%; border: 1.5px solid #e0e0e0; border-radius: 10px;
+      padding: 10px 12px; font-size: 0.86rem; font-family: inherit;
+      color: #333; resize: vertical; min-height: 80px; outline: none;
+      background: #fafafa;
+    }
+    .reflection-textarea:focus { border-color: #2e7d5e; background: white; }
+    .reflection-saved {
+      font-size: 0.72rem; color: #aaa; margin-top: 4px; text-align: right;
+    }
+
+    /* ── Generelle info-styles ───────────────────── */
     .hidden { display: none !important; }
-
-    .empty-msg {
-      text-align: center;
-      color: #888;
-      font-size: 0.95rem;
-      margin-top: 40px;
-    }
-
-    /* ── Voksenspørsmål ─────────────────────────── */
-
-    #voksne-view { display: none; }
-
-    .voksne-intro {
-      background: #fffbe6;
-      border-left: 4px solid #ffd166;
-      border-radius: 10px;
-      padding: 14px 16px;
-      margin-bottom: 24px;
-      font-size: 0.88rem;
-      line-height: 1.6;
-      color: #555;
-    }
-    .voksne-intro strong { color: #1a1a1a; display: block; margin-bottom: 4px; font-size: 0.93rem; }
-
-    .voksne-category {
-      margin-bottom: 28px;
-    }
-
-    .voksne-category-heading {
-      font-size: 0.74rem;
-      font-weight: 700;
-      letter-spacing: 0.07em;
-      text-transform: uppercase;
-      color: #b07d00;
-      margin-bottom: 12px;
-      padding-left: 2px;
-    }
-
-    .vq-card {
-      background: white;
-      border-radius: 12px;
-      padding: 14px 16px;
-      margin-bottom: 10px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
-      display: flex;
-      gap: 12px;
-      align-items: flex-start;
-    }
-
-    .vq-num {
-      font-size: 0.85rem;
-      font-weight: 800;
-      color: #ffd166;
-      background: #1a1a1a;
-      border-radius: 50%;
-      width: 26px;
-      height: 26px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      margin-top: 1px;
-    }
-
-    .vq-body { flex: 1; }
-
-    .vq-question {
-      font-size: 0.95rem;
-      font-weight: 600;
-      line-height: 1.5;
-      color: #1a1a1a;
-    }
-
-    .vq-source {
-      margin-top: 5px;
-      font-size: 0.75rem;
-      color: #999;
-      font-style: italic;
-    }
-
-    /* ── Rammeplan & Basisferdigheter ────────────── */
-
-    #rammeplan-view, #basis-view { display: none; }
+    .empty-msg { text-align: center; color: #888; font-size: 0.92rem; margin-top: 40px; }
 
     .info-intro {
-      background: white;
-      border-radius: 14px;
-      padding: 18px;
-      margin-bottom: 20px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      background: white; border-radius: 14px; padding: 16px;
+      margin-bottom: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.07);
     }
-    .info-intro-label {
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.07em;
-      text-transform: uppercase;
-      color: #2e7d5e;
-      margin-bottom: 6px;
-    }
-    .info-intro h2 {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: #1a1a1a;
-      margin-bottom: 8px;
-    }
-    .info-intro p {
-      font-size: 0.9rem;
-      line-height: 1.65;
-      color: #555;
-    }
-    .info-intro blockquote {
-      border-left: 3px solid #2e7d5e;
-      margin: 10px 0 0;
-      padding-left: 12px;
-      font-style: italic;
-      font-size: 0.9rem;
-      color: #444;
-    }
+    .info-intro-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: #2e7d5e; margin-bottom: 5px; }
+    .info-intro h2 { font-size: 1.05rem; font-weight: 700; color: #1a1a1a; margin-bottom: 6px; }
+    .info-intro p { font-size: 0.88rem; line-height: 1.6; color: #555; }
+    .info-intro blockquote { border-left: 3px solid #2e7d5e; margin: 10px 0 0; padding-left: 12px; font-style: italic; font-size: 0.88rem; color: #444; }
 
-    .info-section { margin-bottom: 24px; }
-    .info-section-heading {
-      font-size: 0.74rem;
-      font-weight: 700;
-      letter-spacing: 0.07em;
-      text-transform: uppercase;
-      color: #2e7d5e;
-      margin-bottom: 12px;
-      padding-left: 2px;
-    }
+    .info-section { margin-bottom: 22px; }
+    .info-section-heading { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: #2e7d5e; margin-bottom: 10px; padding-left: 2px; }
 
-    .kv-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 4px;
-    }
-    .kv-card {
-      background: white;
-      border-radius: 12px;
-      padding: 14px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
-      text-align: center;
-    }
-    .kv-icon { font-size: 1.6rem; }
-    .kv-title {
-      font-size: 0.85rem;
-      font-weight: 700;
-      margin-top: 6px;
-      color: #1a1a1a;
-    }
-    .kv-desc {
-      font-size: 0.78rem;
-      color: #666;
-      line-height: 1.45;
-      margin-top: 4px;
-    }
+    .kv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .kv-card { background: white; border-radius: 12px; padding: 14px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); text-align: center; }
+    .kv-icon { font-size: 1.5rem; }
+    .kv-title { font-size: 0.83rem; font-weight: 700; margin-top: 5px; color: #1a1a1a; }
+    .kv-desc { font-size: 0.76rem; color: #666; line-height: 1.4; margin-top: 3px; }
 
-    .info-accordion { margin-bottom: 10px; }
-    .info-acc-header {
-      background: white;
-      border-radius: 12px;
-      padding: 14px 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      cursor: pointer;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
-      user-select: none;
-      -webkit-tap-highlight-color: transparent;
-      gap: 10px;
-    }
-    .info-acc-header:active { background: #f8f8f8; }
-    .info-acc-left { display: flex; align-items: center; gap: 10px; }
-    .info-acc-icon { font-size: 1.4rem; flex-shrink: 0; }
-    .info-acc-title { font-size: 0.97rem; font-weight: 600; color: #1a1a1a; }
-    .info-acc-body {
-      display: none;
-      background: white;
-      border-radius: 0 0 12px 12px;
-      padding: 0 16px 16px;
-      margin-top: -6px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.06);
-    }
-    .info-acc-body.open { display: block; }
-    .info-acc-header.open { border-radius: 12px 12px 0 0; box-shadow: 0 2px 0 rgba(0,0,0,0.04); }
-
-    .info-list {
-      list-style: none;
-      margin-top: 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-    .info-list li {
-      display: flex;
-      gap: 10px;
-      font-size: 0.88rem;
-      line-height: 1.55;
-      color: #333;
-      padding: 10px 12px;
-      background: #f0f7f4;
-      border-radius: 8px;
-    }
-    .info-list li .dot {
-      color: #2e7d5e;
-      font-weight: 900;
-      flex-shrink: 0;
-    }
+    .info-list { list-style: none; margin-top: 0; display: flex; flex-direction: column; gap: 7px; }
+    .info-list li { display: flex; gap: 9px; font-size: 0.86rem; line-height: 1.5; color: #333; padding: 10px 12px; background: #f0f7f4; border-radius: 8px; }
+    .info-list li .dot { color: #2e7d5e; font-weight: 900; flex-shrink: 0; }
     .info-list.basis li { background: #fff7ed; }
     .info-list.basis li .dot { color: #e07000; }
 
-    .basis-tip {
-      margin-top: 12px;
-      background: #fff3cd;
-      border-radius: 8px;
-      padding: 10px 13px;
-      font-size: 0.83rem;
-      color: #856404;
-      line-height: 1.5;
+    /* Egenvurdering */
+    .ev-card {
+      background: white; border-radius: 12px; padding: 13px 14px;
+      margin-bottom: 9px; box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+      display: flex; gap: 11px; align-items: flex-start; cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
     }
+    .ev-card:active { background: #fafafa; }
+    .ev-check {
+      width: 22px; height: 22px; border-radius: 6px; border: 2px solid #ddd;
+      flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+      font-size: 0.85rem; margin-top: 1px; transition: all 0.15s;
+    }
+    .ev-check.checked { background: #2e7d5e; border-color: #2e7d5e; color: white; }
+    .ev-body { flex: 1; }
+    .ev-question { font-size: 0.9rem; font-weight: 600; line-height: 1.45; color: #1a1a1a; }
+    .ev-source { margin-top: 4px; font-size: 0.72rem; color: #aaa; font-style: italic; }
+    .ev-progress {
+      background: white; border-radius: 12px; padding: 14px 16px;
+      margin-bottom: 18px; box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    }
+    .ev-progress-label { font-size: 0.78rem; color: #666; margin-bottom: 8px; }
+    .ev-progress-bar { height: 8px; background: #e0e0e0; border-radius: 10px; overflow: hidden; }
+    .ev-progress-fill { height: 100%; background: #2e7d5e; border-radius: 10px; transition: width 0.3s; }
+    .ev-progress-text { font-size: 0.78rem; color: #2e7d5e; font-weight: 700; margin-top: 5px; }
+
+    /* Voksne spørsmål */
+    .voksne-intro { background: #fffbe6; border-left: 4px solid #ffd166; border-radius: 10px; padding: 13px 15px; margin-bottom: 22px; font-size: 0.86rem; line-height: 1.6; color: #555; }
+    .voksne-intro strong { color: #1a1a1a; display: block; margin-bottom: 4px; font-size: 0.92rem; }
+    .voksne-category { margin-bottom: 24px; }
+    .voksne-category-heading { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: #b07d00; margin-bottom: 10px; padding-left: 2px; }
+
+    /* Basisferdigheter */
+    .info-accordion { margin-bottom: 9px; }
+    .info-acc-header {
+      background: white; border-radius: 12px; padding: 13px 15px;
+      display: flex; justify-content: space-between; align-items: center;
+      cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+      user-select: none; -webkit-tap-highlight-color: transparent; gap: 10px;
+    }
+    .info-acc-header:active { background: #f8f8f8; }
+    .info-acc-left { display: flex; align-items: center; gap: 9px; }
+    .info-acc-icon { font-size: 1.3rem; flex-shrink: 0; }
+    .info-acc-title { font-size: 0.95rem; font-weight: 600; color: #1a1a1a; }
+    .info-acc-body { display: none; background: white; border-radius: 0 0 12px 12px; padding: 0 15px 15px; margin-top: -4px; box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
+    .info-acc-body.open { display: block; }
+    .info-acc-header.open { border-radius: 12px 12px 0 0; box-shadow: 0 2px 0 rgba(0,0,0,0.03); }
+
+    .basis-tip { margin-top: 10px; background: #fff3cd; border-radius: 8px; padding: 9px 12px; font-size: 0.81rem; color: #856404; line-height: 1.5; }
     .basis-tip strong { display: block; margin-bottom: 2px; }
 
-    .ressurs-seksjon {
-      margin-top: 14px;
-      border-top: 1px solid #f0ece4;
-      padding-top: 12px;
-    }
-    .ressurs-label {
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: #aaa;
-      margin-bottom: 8px;
-    }
-    .ressurs-lenker {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 7px;
-    }
-    .ressurs-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 0.78rem;
-      font-weight: 600;
-      padding: 6px 12px;
-      border-radius: 20px;
-      text-decoration: none;
-      border: none;
-      cursor: pointer;
-    }
-    .ressurs-btn-yt {
-      background: #ff0000;
-      color: white;
-    }
-    .ressurs-btn-web {
-      background: #f0f0f0;
-      color: #333;
-    }
-    .ressurs-btn:active { opacity: 0.8; }
+    .ressurs-seksjon { margin-top: 12px; border-top: 1px solid #f0ece4; padding-top: 10px; }
+    .ressurs-label { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #bbb; margin-bottom: 7px; }
+    .ressurs-lenker { display: flex; flex-wrap: wrap; gap: 6px; }
+    .ressurs-btn { display: inline-flex; align-items: center; gap: 4px; font-size: 0.76rem; font-weight: 600; padding: 6px 11px; border-radius: 20px; text-decoration: none; }
+    .ressurs-btn-yt { background: #fee2e2; color: #b91c1c; }
+    .ressurs-btn-web { background: #f0f0f0; color: #333; }
 
-    .filter-btn-rp { border-color: #c4b5fd; color: #c4b5fd; }
-    .filter-btn-rp.active { background: #c4b5fd; color: #1a1a1a; border-color: #c4b5fd; }
+    /* Rammeplan-side */
+    #rammeplan-view, #basis-view, #inspirasjon-view, #voksne-view { display: none; }
 
-    .filter-btn-basis { border-color: #fdba74; color: #fdba74; }
-    .filter-btn-basis.active { background: #fdba74; color: #1a1a1a; border-color: #fdba74; }
+    /* Inspirasjon */
+    .insp-card { background: white; border-radius: 14px; margin-bottom: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); overflow: hidden; }
+    .insp-card-body { padding: 14px 14px 16px; }
+    .insp-type-row { display: flex; align-items: center; gap: 6px; margin-bottom: 7px; }
+    .insp-badge { font-size: 0.66rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; padding: 3px 8px; border-radius: 20px; }
+    .badge-yt  { background: #fee2e2; color: #b91c1c; }
+    .badge-ig  { background: #fce7f3; color: #9d174d; }
+    .badge-web { background: #e0f2fe; color: #0369a1; }
+    .badge-rp  { background: #f3e8ff; color: #6d28d9; }
+    .insp-title { font-size: 0.97rem; font-weight: 700; color: #1a1a1a; margin-bottom: 5px; line-height: 1.3; }
+    .insp-desc { font-size: 0.83rem; color: #555; line-height: 1.5; margin-bottom: 12px; }
+    .insp-link-btn { display: inline-flex; align-items: center; gap: 5px; font-size: 0.83rem; font-weight: 600; color: #2e7d5e; background: #f0f7f4; padding: 7px 14px; border-radius: 30px; text-decoration: none; -webkit-tap-highlight-color: transparent; }
+    .insp-embed { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; background: #000; }
+    .insp-embed iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
 
-    .featured-video-card {
-      background: linear-gradient(135deg, #1a3a2a 0%, #2e7d5e 100%);
-      border-radius: 16px;
-      padding: 20px;
-      margin-bottom: 24px;
-      color: white;
-      box-shadow: 0 4px 16px rgba(46,125,94,0.3);
-    }
-    .featured-video-label {
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      opacity: 0.75;
-      margin-bottom: 8px;
-    }
-    .featured-video-title {
-      font-size: 1.1rem;
-      font-weight: 700;
-      line-height: 1.35;
-      margin-bottom: 6px;
-    }
-    .featured-video-meta {
-      font-size: 0.82rem;
-      opacity: 0.8;
-      margin-bottom: 16px;
-      line-height: 1.5;
-    }
-    .featured-video-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: white;
-      color: #1a3a2a;
-      font-size: 0.9rem;
-      font-weight: 700;
-      padding: 10px 20px;
-      border-radius: 30px;
-      text-decoration: none;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .featured-video-btn:active { opacity: 0.85; }
+    /* Featured video */
+    .featured-video-card { background: linear-gradient(135deg, #1a3a2a 0%, #2e7d5e 100%); border-radius: 14px; padding: 18px; margin-bottom: 20px; color: white; box-shadow: 0 4px 16px rgba(46,125,94,0.3); display: block; text-decoration: none; -webkit-tap-highlight-color: transparent; }
+    .featured-video-label { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.75; margin-bottom: 7px; }
+    .featured-video-title { font-size: 1.05rem; font-weight: 700; line-height: 1.3; margin-bottom: 5px; }
+    .featured-video-meta { font-size: 0.8rem; opacity: 0.8; margin-bottom: 14px; line-height: 1.45; }
+    .featured-video-btn { display: inline-flex; align-items: center; gap: 7px; background: white; color: #1a3a2a; font-size: 0.88rem; font-weight: 700; padding: 9px 18px; border-radius: 30px; }
 
-    /* ── Inspirasjon ─────────────────────────────── */
+    /* Toast */
+    .toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      background: #1a1a1a; color: white; padding: 10px 20px; border-radius: 30px;
+      font-size: 0.85rem; font-weight: 600; z-index: 999;
+      opacity: 0; pointer-events: none; transition: opacity 0.2s;
+      white-space: nowrap;
+    }
+    .toast.show { opacity: 1; }
 
-    #inspirasjon-view { display: none; }
-
-    .insp-card {
-      background: white;
-      border-radius: 14px;
-      margin-bottom: 16px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-      overflow: hidden;
+    /* Print */
+    @media print {
+      header, .filter-bar, .search-bar, .rp-tag-bar, .card-action-row,
+      .fav-btn, .reflection-section, .activity-card:not(.printing) { display: none !important; }
+      .activity-card.printing { box-shadow: none; }
+      .card-body { display: block !important; }
+      body { background: white; }
     }
-    .insp-card-body { padding: 16px 16px 18px; }
-    .insp-type-row {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      margin-bottom: 8px;
-    }
-    .insp-badge {
-      font-size: 0.68rem;
-      font-weight: 700;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      padding: 3px 9px;
-      border-radius: 20px;
-    }
-    .badge-yt       { background: #fee2e2; color: #b91c1c; }
-    .badge-ig       { background: #fce7f3; color: #9d174d; }
-    .badge-web      { background: #e0f2fe; color: #0369a1; }
-    .badge-rp       { background: #f3e8ff; color: #6d28d9; }
-
-    .insp-title {
-      font-size: 1rem;
-      font-weight: 700;
-      color: #1a1a1a;
-      margin-bottom: 5px;
-      line-height: 1.35;
-    }
-    .insp-desc {
-      font-size: 0.85rem;
-      color: #555;
-      line-height: 1.55;
-      margin-bottom: 14px;
-    }
-    .insp-link-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: #2e7d5e;
-      background: #f0f7f4;
-      padding: 8px 16px;
-      border-radius: 30px;
-      text-decoration: none;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .insp-link-btn:active { opacity: 0.75; }
-
-    .insp-embed {
-      position: relative;
-      padding-bottom: 56.25%;
-      height: 0;
-      overflow: hidden;
-      background: #000;
-    }
-    .insp-embed iframe {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      border: none;
-    }
-
-    .filter-btn-insp { border-color: #6ee7b7; color: #6ee7b7; }
-    .filter-btn-insp.active { background: #6ee7b7; color: #1a1a1a; border-color: #6ee7b7; }
   </style>
 </head>
 <body>
 
 <header>
-  <h1>Natur, helse og bevegelse</h1>
-  <p>Trykk på en aktivitet for å se beskrivelse og spørsmål</p>
+  <div class="header-left">
+    <h1>Natur, helse og bevegelse</h1>
+    <p>Trykk på en aktivitet for å se detaljer</p>
+  </div>
+  <button class="random-btn" onclick="randomActivity()">Tilfeldig aktivitet</button>
 </header>
 
 <div class="filter-bar">
@@ -658,27 +379,35 @@
   <button class="filter-btn" data-filter="3-6">3–6 år</button>
   <button class="filter-btn" data-filter="inne">Inne</button>
   <button class="filter-btn" data-filter="skog">Skog</button>
+  <button class="filter-btn filter-btn-fav" data-filter="favoritter">♥ Favoritter</button>
   <div class="filter-divider"></div>
   <button class="filter-btn filter-btn-voksne" data-filter="voksne">For voksne</button>
-  <button class="filter-btn filter-btn-rp" data-filter="rammeplan">Rammeplan</button>
+  <button class="filter-btn filter-btn-rp"    data-filter="rammeplan">Rammeplan</button>
   <button class="filter-btn filter-btn-basis" data-filter="basis">Basisferdigheter</button>
-  <button class="filter-btn filter-btn-insp" data-filter="inspirasjon">Inspirasjon</button>
+  <button class="filter-btn filter-btn-insp"  data-filter="inspirasjon">Inspirasjon</button>
 </div>
+
+<div class="search-bar" id="search-bar">
+  <input class="search-input" id="search-input" type="text" placeholder="🔍  Søk etter aktivitet..." autocomplete="off" />
+</div>
+
+<div class="rp-tag-bar" id="rp-tag-bar"></div>
 
 <main>
   <div id="activity-list"></div>
-  <p class="empty-msg hidden" id="empty-msg">Ingen aktiviteter funnet for dette filteret.</p>
+  <p class="empty-msg hidden" id="empty-msg">Ingen aktiviteter funnet.</p>
 
+  <!-- For voksne -->
   <div id="voksne-view">
     <div class="voksne-intro">
       <strong>Didaktiske spørsmål for voksne</strong>
-      Disse spørsmålene er ment som redskaper for faglig refleksjon – i planlegging, etter aktiviteter og i personalgruppen. De er forankret i forskning på barnehagekvalitet, herunder CLASS-skalaen (Pianta m.fl.), I-TERS/ECERS-R (Harms m.fl.) og norsk rammeplan for barnehagen.
+      Forankret i CLASS-skalaen (Pianta m.fl.), I-TERS/ECERS-R (Harms m.fl.) og norsk rammeplan. Kryss av spørsmål du har reflektert over.
     </div>
-
+    <div id="ev-progress-container"></div>
     <div id="voksne-categories"></div>
   </div>
 
-  <!-- ── Rammeplan-view ── -->
+  <!-- Rammeplan -->
   <div id="rammeplan-view">
     <div class="info-intro">
       <div class="info-intro-label">Rammeplan for barnehagen</div>
@@ -686,7 +415,6 @@
       <p>Vaner og handlingsmønstre tar form allerede fra tidlig alder. Gode vaner som tilegnes i barnehagealder, kan vare livet ut.</p>
       <blockquote>«Barnehagen skal sikre at alle barn opplever bevegelsesglede, matglede og matkultur, mentalt og sosialt velvære og fysisk og psykisk helse.»</blockquote>
     </div>
-
     <div class="info-section">
       <div class="info-section-heading">Kjerneverdier</div>
       <div class="kv-grid">
@@ -696,27 +424,24 @@
         <div class="kv-card"><div class="kv-icon">💪</div><div class="kv-title">Fysisk helse</div><div class="kv-desc">Gode vaner for kosthold, hygiene, aktivitet og hvile fra tidlig alder</div></div>
       </div>
     </div>
-
     <div class="info-section">
       <div class="info-section-heading">Hva barna skal oppleve og lære</div>
       <ul class="info-list" id="rp-mal-list"></ul>
     </div>
-
     <div class="info-section">
       <div class="info-section-heading">Personalets ansvar</div>
       <ul class="info-list" id="rp-personal-list"></ul>
     </div>
   </div>
 
-  <!-- ── Basisferdigheter-view ── -->
+  <!-- Basisferdigheter -->
   <div id="basis-view">
-    <a href="https://film.oslomet.no/naturglede-og-friluftsliv-i" target="_blank" rel="noopener" class="featured-video-card" style="display:block;text-decoration:none;">
+    <a href="https://film.oslomet.no/naturglede-og-friluftsliv-i" target="_blank" rel="noopener" class="featured-video-card">
       <div class="featured-video-label">▶ Anbefalt video · OsloMet · 7 min</div>
       <div class="featured-video-title">Naturglede og friluftsliv i barnehagen</div>
-      <div class="featured-video-meta">Henrik Neegaard, førsteamanuensis i barnehagelærerutdanning, viser hvordan naturen beriker det pedagogiske arbeidet i barnehagen.</div>
+      <div class="featured-video-meta">Henrik Neegaard, førsteamanuensis ved barnehagelærerutdanningen, viser hvordan naturen beriker det pedagogiske arbeidet.</div>
       <span class="featured-video-btn">▶ Se video</span>
     </a>
-
     <div class="info-intro">
       <div class="info-intro-label">Praktisk kunnskap</div>
       <h2>Basisferdigheter ute</h2>
@@ -725,15 +450,13 @@
     <div id="basis-kategorier"></div>
   </div>
 
-  <!-- ── Inspirasjon-view ── -->
+  <!-- Inspirasjon -->
   <div id="inspirasjon-view">
     <div class="info-intro">
       <div class="info-intro-label">Samlede ressurser</div>
       <h2>Inspirasjon</h2>
       <p>Videoer, fortellinger og faglige ressurser som kan inspirere arbeidet med natur, helse og bevegelse i barnehagen.</p>
     </div>
-
-    <!-- YouTube: Natur og friluftsliv i barnehagen -->
     <div class="insp-card">
       <div class="insp-embed">
         <iframe src="https://www.youtube.com/embed/EuWvM1JufSM" allowfullscreen loading="lazy"></iframe>
@@ -741,12 +464,10 @@
       <div class="insp-card-body">
         <div class="insp-type-row"><span class="insp-badge badge-yt">YouTube</span></div>
         <div class="insp-title">Natur og friluftsliv i barnehagen</div>
-        <div class="insp-desc">Video som viser hvordan barnehagen kan jobbe med natur og friluftsliv som pedagogisk arena – med barn i fokus.</div>
+        <div class="insp-desc">Video som viser hvordan barnehagen kan jobbe med natur og friluftsliv som pedagogisk arena.</div>
         <a href="https://www.youtube.com/watch?v=EuWvM1JufSM" target="_blank" rel="noopener" class="insp-link-btn">▶ Åpne på YouTube</a>
       </div>
     </div>
-
-    <!-- Instagram -->
     <div class="insp-card">
       <div class="insp-card-body">
         <div class="insp-type-row"><span class="insp-badge badge-ig">Instagram</span></div>
@@ -755,467 +476,239 @@
         <a href="https://www.instagram.com/reel/DPYpO7OiNEO/" target="_blank" rel="noopener" class="insp-link-btn">↗ Se på Instagram</a>
       </div>
     </div>
-
-    <!-- PBL -->
     <div class="insp-card">
       <div class="insp-card-body">
         <div class="insp-type-row"><span class="insp-badge badge-web">Fortelling</span></div>
         <div class="insp-title">Sør-Beitstad barnehage – natur og friluftsliv i praksis</div>
-        <div class="insp-desc">PBLs portrett av en barnehage i Steinkjer som jobber aktivt med natur, utelek, mat og barnas følelsesliv. Inspirerende eksempel på pedagogikk i praksis.</div>
+        <div class="insp-desc">PBLs portrett av en barnehage i Steinkjer som jobber aktivt med natur, utelek, mat og barnas følelsesliv.</div>
         <a href="https://www.pbl.no/sider/fortellinger-fra-barnehagen/sor-beitstad-barnehage/" target="_blank" rel="noopener" class="insp-link-btn">↗ Les fortellingen</a>
       </div>
     </div>
-
-    <!-- Udir -->
     <div class="insp-card">
       <div class="insp-card-body">
         <div class="insp-type-row"><span class="insp-badge badge-rp">Rammeplan</span></div>
         <div class="insp-title">Kropp, bevegelse, mat og helse – Udir</div>
-        <div class="insp-desc">Utdanningsdirektoratets offisielle side for fagområdet. Gir oversikt over mål, hva barna skal lære og personalets ansvar – direkte fra Rammeplanen.</div>
+        <div class="insp-desc">Utdanningsdirektoratets offisielle side for fagområdet med mål, læringsinnhold og personalets ansvar.</div>
         <a href="https://www.udir.no/laring-og-trivsel/rammeplan-for-barnehagen/fagomrader/kropp-bevegelse-mat-helse/" target="_blank" rel="noopener" class="insp-link-btn">↗ Les på Udir</a>
       </div>
     </div>
   </div>
 </main>
 
+<div class="toast" id="toast"></div>
+
 <script>
 // ── Aktiviteter ────────────────────────────────────────────────────────────
-
 const activities = [
-
-  // ── 1–2 ÅR ────────────────────────────────────────────────────────────
-
-  {
-    icon: "🛏️",
-    name: "Pute-klatrefjell",
-    video: null,
-    age: "1-2", sted: "inne",
-    description:
-      "Stable tre–fire puter og en liten madrass til et lite «fjell» på gulvet. La barna klatre opp, sette seg på toppen og rulle eller gli ned. Vær tett på og sikre at underlaget er mykt. Aktiviteten styrker grovmotorikk, kjernemuskulatur og romlig forståelse.",
-    questions: [
-      "Hva kjentes det ut som å klatre opp? Er det lett eller tungt i beina?",
-      "Hva skjer med kroppen din når du ruller ned? Hvem merker at det går fort?",
-      "Kan du vise meg én annen måte å komme ned fra toppen på?"
-    ]
-  },
-  {
-    icon: "🪑",
-    name: "Kryp under broen",
-    age: "1-2", sted: "inne",
-    description:
-      "Sett fire–seks stoler på rad med litt mellomrom. Barna krabber på alle fire under setene fra ende til ende. Øk utfordringen ved å henge et teppe over stolene slik at det blir mørkt inne. Trener krabbing, kroppskontroll og romfølelse.",
-    questions: [
-      "Hva ser du inne i tunnelen? Hva hører du?",
-      "Hva bruker du til å komme deg fremover – armer, knær, magen?",
-      "Hvordan er det å krype i mørket? Hva hjelper deg da?"
-    ]
-  },
-  {
-    icon: "🎵",
-    name: "Dans med skjerf",
-    age: "1-2", sted: "inne",
-    description:
-      "Gi hvert barn et lett, fargerikt silkeskjerf eller tørkle. Spill rolig musikk og oppmuntre barna til å svinge, vifte og bevege skjerfet i takt. Varier farten med musikken – sakte vals, så litt raskere barnesang. Fremmer rytmesans, kroppskontroll og grovmotorikk.",
-    questions: [
-      "Hvilken farge har skjerfet ditt? Hva skjer med det når du løper?",
-      "Hva gjør musikken med beina dine? Liker du rask eller sakte musikk?",
-      "Kan du gjemme ansiktet under skjerfet og så titte frem igjen?"
-    ]
-  },
-  {
-    icon: "🏀",
-    name: "Rull ballen til hverandre",
-    age: "1-2", sted: "inne",
-    description:
-      "Sett barna i par på gulvet med strakte bein og rull en stor, myk ball mellom dem. Start med kort avstand og øk gradvis. Forsøk ulike ballstørrelser. Aktiviteten trener øye–håndkoordinasjon, venting og enkel sosial samhandling.",
-    questions: [
-      "Hvordan må du sitte for at ballen ikke skal renne til siden?",
-      "Hva gjør du med hendene dine når ballen kommer mot deg?",
-      "Hva tror du skjer hvis vi bruker en mye mindre ball?"
-    ]
-  },
-  {
-    icon: "🐛",
-    name: "Ormeløp på madrass",
-    age: "1-2", sted: "inne",
-    description:
-      "Legg en liten madrass eller tykk gymnastikmatte på gulvet. Barna legger seg på magen og prøver å bevege seg fremover kun ved hjelp av armene – som en orm. Lek med det: hvem kan bevege seg uten å bruke knærne? Trener armstyrke, kroppsspenst og kreativ bevegelse.",
-    questions: [
-      "Hva bruker du for å dra deg fremover – armer, magen, tærne?",
-      "Hva synes du er vanskeligst – å komme i gang eller å holde på?",
-      "Vet du hvordan en orm beveger seg ute? Har du sett en?"
-    ]
-  },
-  {
-    icon: "🍂",
-    name: "Trampe på løv",
-    age: "1-2", sted: "skog",
-    description:
-      "Gå en tur i skogen og finn steder med mange løv. La barna stampe, hoppe og rote i løvhaugene med stor frihet. Hjelp dem å legge merke til lyden og følelsen under føttene. Enkelt, sensorisk og veldig gøy – fremmer sanseintegrasjon og grovmotorikk.",
-    questions: [
-      "Hva hører du når du tramper på løvene?",
-      "Hvilken farge har løvene? Finn et blad og si fargen!",
-      "Hva skjer med løvene når vi kaster dem opp i lufta?"
-    ]
-  },
-  {
-    icon: "🪨",
-    name: "Steinesamling",
-    age: "1-2", sted: "skog",
-    description:
-      "Gi hvert barn en liten bøtte eller pose. De skal samle steiner av ulik størrelse langs stien. Hjelp dem å sammenlikne: stor og liten, lett og tung, glatt og ru. Tøm og fyll bøttene om igjen. Trener finmotorikk, begrepsforståelse og konsentrasjon.",
-    questions: [
-      "Finn den største steinen du kan løfte! Finn den minste!",
-      "Hvordan kjennes steinen ut i hånden – glatt eller ru?",
-      "Hva tror du bor under en stor stein?"
-    ]
-  },
-  {
-    icon: "💧",
-    name: "Plaske i sølepytter",
-    age: "1-2", sted: "skog",
-    description:
-      "Med gummistøvler og regnbukse – la barna gå rett i sølepyttene! Oppmuntre dem til å trampe, hoppe og se hva som skjer med vannet og gjørmen. En rik sensorisk opplevelse som fremmer frimodighet, sensorisk bevissthet og grovmotorikk.",
-    questions: [
-      "Hva skjer med vannet når du tramper i det?",
-      "Er vannet kaldt eller varmt? Hva synes du er best?",
-      "Kan du lage en stor og en liten sprut? Hva er forskjellen?"
-    ]
-  },
-  {
-    icon: "🌿",
-    name: "Gå på ujevnt underlag",
-    age: "1-2", sted: "skog",
-    description:
-      "Ta med barna ut i skogen og la dem gå på røtter, greiner, over steiner og i mykt moseunderlag. Gå sakte, hold i hånden ved behov, og navngi det dere går på. Ujevnt underlag er utmerket balanse­trening og styrker ankler og fotsåler.",
-    questions: [
-      "Hva er vanskeligst å gå på – røtter, steiner eller mykt mose?",
-      "Hva gjør du med armene dine for å ikke falle?",
-      "Hva hører du i skogen? Stå helt stille og lytt."
-    ]
-  },
-  {
-    icon: "🎒",
-    name: "Bær pakken din",
-    age: "1-2", sted: "skog",
-    description:
-      "La hvert barn bære sin egen lille ryggsekk med et eple, en vannflaske og kanskje en leke. Gå en kort tur i skogen. Bytt mellom å bære sekken foran og bak. Gir mestringsfølelse, trener balanse og styrker kjernemuskulaturen.",
-    questions: [
-      "Hvordan kjennes det å bære sekken din? Er den tung eller lett?",
-      "Hva har du i sekken din? Kan du huske alt?",
-      "Hva ville du puttet i sekken hvis du fikk velge selv?"
-    ]
-  },
-
-  // ── 3–6 ÅR ────────────────────────────────────────────────────────────
-
-  {
-    icon: "🏔️",
-    name: "Hinderløype innendørs",
-    age: "3-6", sted: "inne",
-    description:
-      "Bygg en hinderløype med puter å hoppe mellom, en stol å kravle under, en madrass å rulle over og en balanseplanke (brett) å gå på. Barna løper løypen én og én med tidtaking. Kan gjøres som stafett i to lag. Trener koordinasjon, planlegging og utholdenhet.",
-    questions: [
-      "Hvilken hindring synes du var vanskeligst? Hva måtte du gjøre annerledes?",
-      "Hva tenkte du på for å holde balansen på planken?",
-      "Hvis du fikk lage din egen løype, hvilke hindringer ville du valgt?"
-    ]
-  },
-  {
-    icon: "🌉",
-    name: "Putebroen",
-    age: "3-6", sted: "inne",
-    description:
-      "Legg puter på rekke med litt avstand mellom dem – som en bro over et «hav». Barna må hoppe fra pute til pute uten å treffe gulvet. Gjør det vanskeligere ved å øke avstanden eller fjerne puter underveis. Trener hoppkraft, planlegging og romlig forståelse.",
-    questions: [
-      "Hvordan planlegger du neste hopp? Ser du på puten eller på beina dine?",
-      "Hva skjer i kroppen din rett før du hopper? Hva gjør armene dine?",
-      "Hvorfor tror du det er lettere å hoppe fra et høyt sted enn fra et lavt?"
-    ]
-  },
-  {
-    icon: "🪑",
-    name: "Stolsdansen",
-    age: "3-6", sted: "inne",
-    description:
-      "Klassisk stols-dans: én stol færre enn antall barn. Musikk spiller – barna danser rundt stolene. Når musikken stopper, finner alle en stol å sette seg på. Den som ikke finner plass er med og passer på musikken neste runde. Trener reaksjonsevne, romforståelse og sosiale regler.",
-    questions: [
-      "Hva gjør du for å finne en ledig stol raskt? Har du en strategi?",
-      "Hvordan kjentes det om du ikke fikk plass? Og når du fikk plass?",
-      "Hva er fair play i denne leken? Hva er det viktig at vi ikke gjør?"
-    ]
-  },
-  {
-    icon: "🤸",
-    name: "Akrobat-stafett",
-    age: "3-6", sted: "inne",
-    description:
-      "Del barna i to lag. Hvert lag har en madrass. Stafetten inneholder: én kuvending på madrassen, tre hopp på stedet, krype under to stoler og løpe tilbake. Neste på laget starter når den forrige er tilbake. Trener grovmotorikk, koordinasjon og lagfølelse.",
-    questions: [
-      "Hva er det viktigste du gjør for laget ditt i en stafett?",
-      "Hvilken del av stafetten krevde mest av kroppen din?",
-      "Hva kunne vi endret for å gjøre stafetten enda mer spennende?"
-    ]
-  },
-  {
-    icon: "🏗️",
-    name: "Bygg en hule",
-    age: "3-6", sted: "inne",
-    description:
-      "Gi barna stoler, tepper, puter og klesklyper. Oppgaven er å bygge en hule de kan krype inn i og sitte i. De planlegger, forhandler og bygger sammen. Etterpå leser dere en bok eller spiser matpakken inne i hulen. Fremmer kreativitet, samarbeid og finmotorikk.",
-    questions: [
-      "Hvordan bestemte dere hvem som skulle gjøre hva i byggingen?",
-      "Hva ville du gjort annerledes neste gang for å gjøre hulen enda bedre?",
-      "Hva tror du hule-bygging har til felles med det å bygge et ekte hus?"
-    ]
-  },
-  {
-    icon: "🌲",
-    name: "Skogsstafett",
-    age: "3-6", sted: "skog",
-    description:
-      "Merk tre–fire poster mellom trærne med fargerike band. Barna løper i lag fra post til post, henter et lite objekt (kongle, stein) og bringer det tilbake. Varier traseen: rundt trær, over en stubbe, under en gren. Trener utholdenhet, orientering og lagarbeid.",
-    questions: [
-      "Hvordan fant du veien til neste post? Hva hjalp deg å orientere deg?",
-      "Hva er lurt å gjøre for å spare krefter i et langt løp?",
-      "Hvis du var trener for laget, hva ville du sagt for å motivere dem?"
-    ]
-  },
-  {
-    icon: "🪵",
-    name: "Balansegang i skogen",
-    age: "3-6", sted: "skog",
-    description:
-      "Finn liggende stokker, store røtter og flate steiner. Barna skal balansere langs dem uten å treffe bakken. Øk vanskelighetsgraden med å be dem bære noe (en pinne, en stein) mens de balanserer. Trener balanse, konsentrasjon og kroppsbevissthet.",
-    questions: [
-      "Hva gjør du med armene dine for å holde balansen?",
-      "Hvor ser du når du balanserer – på bena, på stokkene eller rett frem?",
-      "Hva er vanskeligst: å starte, gå i midten eller avslutte? Hvorfor?"
-    ]
-  },
-  {
-    icon: "🏕️",
-    name: "Bygg hytte av kvister",
-    age: "3-6", sted: "skog",
-    description:
-      "Finn en passe stor bjørk eller furu og len lange kvister mot stammen. Fyll mellomrommene med mindre kvister, mose og løv. Jobb i grupper på tre–fire. Snakk om hvilke materialer som holder best, og test konstruksjonen ved å krype inn. Fremmer samarbeid, naturkunnskap og kreativ problemløsning.",
-    questions: [
-      "Hvilke kvister fungerte best – tynne eller tykke? Lange eller korte?",
-      "Hva ville du brukt for å tette veggene hvis det begynte å regne?",
-      "Dyr lager også hus i skogen. Hvilke dyr vet du om som gjør det?"
-    ]
-  },
-  {
-    icon: "🔍",
-    name: "Naturdetektiv-skattejakt",
-    age: "3-6", sted: "skog",
-    description:
-      "Lag kort med tegninger eller bilder: en kongle, et mosebegrodd tre, et fuglerede, en paddehat, en stein ved en bekk. Barna jobber i par for å finne alt på lista. Avslutt med å samles og dele hva de fant og hvor. Fremmer observasjonsevne, samarbeid og naturbevissthet.",
-    questions: [
-      "Hva var det vanskeligste å finne? Hvorfor tror du det gjemmer seg der?",
-      "Hva la du merke til i skogen i dag som du ikke hadde lagt merke til før?",
-      "Hva tror du ville skjedd med skogen hvis alle trærne ble borte?"
-    ]
-  },
-  {
-    icon: "🐾",
-    name: "Dyreleken i skogen",
-    age: "3-6", sted: "skog",
-    description:
-      "Læreren roper et dyr – barna beveger seg slik det dyret ville gjort: bjørn (krabbe på alle fire), frosk (hoppe), slange (krype på magen), ørn (løpe med armene ut). Bruk skogen aktivt: klatre over stokker, hoppe over bekken, gjemme seg bak et tre. Trener fantasifullt kroppsspråk og grovmotorikk.",
-    questions: [
-      "Hvilket dyr synes du var morsomst å bevege seg som? Hva gjorde det ekstra gøy?",
-      "Hva tror du hjelper dyret å bevege seg slik det gjør – klør, bein, vinger?",
-      "Hvilke av disse dyrene bor egentlig i den norske skogen?"
-    ]
-  }
-];
-
-// ── Voksenspørsmål ─────────────────────────────────────────────────────────
-
-const voksneKategorier = [
-  {
-    tittel: "Deltakelse og nærvær",
-    sporsmal: [
-      {
-        tekst: "Hvor aktive og deltakende er vi voksne i lekene – beveger vi kroppen selv, eller observerer vi fra sidelinjen?",
-        kilde: "CLASS: Emotional Support – Teacher Sensitivity & Positive Climate"
-      },
-      {
-        tekst: "Er vi sensitive for enkeltbarns signaler under aktivitet – ser vi hvem som er spent, redd, ukomfortabel eller ivrer etter mer?",
-        kilde: "CLASS: Teacher Sensitivity; Rammeplan (2017) – omsorg og trygghet"
-      },
-      {
-        tekst: "Bruker vi kroppen som modell ved å vise bevegelser selv, fremfor å bare instruere verbalt?",
-        kilde: "Storli & Hagen (2010) – voksnes rolle i fysisk lek; CLASS: Instructional Support"
-      },
-      {
-        tekst: "Smitter vår egen glede og energi over på barna – hva kommuniserer kroppsspråket og stemmen vår under aktiviteten?",
-        kilde: "CLASS: Positive Climate; Løkken (2004) – toddlernes kroppslige væremåte"
-      }
-    ]
-  },
-  {
-    tittel: "Tilpasning og inkludering",
-    sporsmal: [
-      {
-        tekst: "Tilpasser vi vanskelighetsgraden slik at alle barn – uavhengig av motorisk nivå – opplever mestring og utfordring?",
-        kilde: "ECERS-R: Motor Activities; CLASS: Regard for Student Perspectives"
-      },
-      {
-        tekst: "Reflekterer vi jevnlig over hvilke barn som sjelden deltar aktivt i fysiske aktiviteter, og hva som kan være grunnen?",
-        kilde: "I-TERS: Active Physical Play; NOU 2012:1 – til barnas beste"
-      },
-      {
-        tekst: "Er vi bevisste på å inkludere barn med ulik bakgrunn, funksjonsnivå og temperament i de fysiske aktivitetene?",
-        kilde: "Rammeplan (2017) – likeverd og inkludering; I-TERS: Space & Furnishings for Play"
-      },
-      {
-        tekst: "Gir vi barna tid nok til å prøve og feile uten at vi griper inn for raskt – og skaper vi rom for risikomestring?",
-        kilde: "Sandseter (2010) – thrilling play outdoors; CLASS: Regard for Student Perspectives"
-      }
-    ]
-  },
-  {
-    tittel: "Pedagogisk planlegging og intensjon",
-    sporsmal: [
-      {
-        tekst: "Har vi en bevisst pedagogisk intensjon bak de fysiske aktivitetene vi velger, eller er det primært aktivering og tidsbruk?",
-        kilde: "Rammeplan (2017) – kropp, bevegelse, mat og helse; Kunnskapsdepartementet (2023)"
-      },
-      {
-        tekst: "Balanserer vi voksenstyrte og barnestyrte bevegelsesaktiviteter i løpet av uken?",
-        kilde: "CLASS: Regard for Student Perspectives; Tholin (2013) – barnehagens innhold"
-      },
-      {
-        tekst: "Planlegger vi aktiviteter som stimulerer ulike motoriske kvaliteter: balanse, koordinasjon, styrke, hurtighet og romfølelse?",
-        kilde: "ECERS-R: Motor Activities; Eid & Brattenborg (2012) – fysisk aktivitet i barnehagen"
-      },
-      {
-        tekst: "Tar vi barnas egne bevegelsesinitiativ og ideer aktivt inn i planleggingen av neste aktivitet?",
-        kilde: "CLASS: Regard for Student Perspectives; Rammeplan (2017) – barns medvirkning"
-      }
-    ]
-  },
-  {
-    tittel: "Språk, samspill og scaffolding",
-    sporsmal: [
-      {
-        tekst: "Bruker vi beskrivende fagspråk knyttet til kropp og bevegelse aktivt underveis – for eksempel 'du bruker kjernemuskelen din nå' eller 'legg merke til balansen i anklene'?",
-        kilde: "CLASS: Language Modeling; Vygotsky – sonen for nærmeste utvikling"
-      },
-      {
-        tekst: "Stiller vi åpne spørsmål under aktiviteten som støtter barnas refleksjon over egne bevegelser og valg?",
-        kilde: "CLASS: Concept Development & Quality of Feedback; Dewey – learning by doing"
-      },
-      {
-        tekst: "Gir vi konkret og anerkjennende tilbakemelding som beskriver hva barnet gjør, fremfor bare generell ros som 'bra jobbet'?",
-        kilde: "CLASS: Quality of Feedback; Dweck (2006) – growth mindset"
-      },
-      {
-        tekst: "Støtter vi barna i å hjelpe og vise hverandre – legger vi til rette for jevnalderscaffolding i bevegelsesaktiviteter?",
-        kilde: "Vygotsky – proksimal utviklingssone; CLASS: Instructional Support"
-      }
-    ]
-  },
-  {
-    tittel: "Refleksjon og profesjonell utvikling",
-    sporsmal: [
-      {
-        tekst: "Dokumenterer vi barnas motoriske utvikling og bruker observasjoner aktivt som grunnlag for videre planlegging?",
-        kilde: "Rammeplan (2017) – dokumentasjon og vurdering; ECERS-R: Provisions for Parents & Staff"
-      },
-      {
-        tekst: "Drøfter vi i personalgruppen hva god kvalitet i fysisk aktivitet konkret betyr for vår barnegruppe?",
-        kilde: "CLASS: Overall Quality; Gotvassli (2013) – barnehagen som lærende organisasjon"
-      },
-      {
-        tekst: "Legger vi bevisst til rette for at barna kan ta risiko og oppleve spenning innenfor trygge rammer – eller begrenser vi aktiviteten mer enn nødvendig?",
-        kilde: "Sandseter (2010) – risky play; Helse- og omsorgsdepartementet (2019) – fysisk aktivitet"
-      },
-      {
-        tekst: "Ser vi og synliggjør vi sammenhengen mellom fysisk aktivitet og barnas trivsel, konsentrasjon og sosiale samspill resten av dagen?",
-        kilde: "Helsedirektoratet (2021) – anbefalinger om fysisk aktivitet; CLASS: Emotional Support"
-      }
-    ]
-  }
+  { icon:"🛏️", name:"Pute-klatrefjell",          video:null, age:"1-2", sted:"inne", description:"Stable tre–fire puter og en liten madrass til et lite «fjell» på gulvet. La barna klatre opp, sette seg på toppen og rulle eller gli ned. Vær tett på og sikre at underlaget er mykt. Aktiviteten styrker grovmotorikk, kjernemuskulatur og romlig forståelse.", questions:["Hva kjentes det ut som å klatre opp? Er det lett eller tungt i beina?","Hva skjer med kroppen din når du ruller ned? Hvem merker at det går fort?","Kan du vise meg én annen måte å komme ned fra toppen på?"] },
+  { icon:"🪑", name:"Kryp under broen",           video:null, age:"1-2", sted:"inne", description:"Sett fire–seks stoler på rad med litt mellomrom. Barna krabber på alle fire under setene fra ende til ende. Øk utfordringen ved å henge et teppe over stolene slik at det blir mørkt inne. Trener krabbing, kroppskontroll og romfølelse.", questions:["Hva ser du inne i tunnelen? Hva hører du?","Hva bruker du til å komme deg fremover – armer, knær, magen?","Hvordan er det å krype i mørket? Hva hjelper deg da?"] },
+  { icon:"🎵", name:"Dans med skjerf",             video:null, age:"1-2", sted:"inne", description:"Gi hvert barn et lett, fargerikt silkeskjerf eller tørkle. Spill rolig musikk og oppmuntre barna til å svinge, vifte og bevege skjerfet i takt. Varier farten med musikken. Fremmer rytmesans, kroppskontroll og grovmotorikk.", questions:["Hvilken farge har skjerfet ditt? Hva skjer med det når du løper?","Hva gjør musikken med beina dine? Liker du rask eller sakte musikk?","Kan du gjemme ansiktet under skjerfet og så titte frem igjen?"] },
+  { icon:"🏀", name:"Rull ballen til hverandre",  video:null, age:"1-2", sted:"inne", description:"Sett barna i par på gulvet med strakte bein og rull en stor, myk ball mellom dem. Start med kort avstand og øk gradvis. Forsøk ulike ballstørrelser. Aktiviteten trener øye–håndkoordinasjon, venting og enkel sosial samhandling.", questions:["Hvordan må du sitte for at ballen ikke skal renne til siden?","Hva gjør du med hendene dine når ballen kommer mot deg?","Hva tror du skjer hvis vi bruker en mye mindre ball?"] },
+  { icon:"🐛", name:"Ormeløp på madrass",          video:null, age:"1-2", sted:"inne", description:"Legg en liten madrass eller tykk gymnastikmatte på gulvet. Barna legger seg på magen og prøver å bevege seg fremover kun ved hjelp av armene – som en orm. Trener armstyrke, kroppsspenst og kreativ bevegelse.", questions:["Hva bruker du for å dra deg fremover – armer, magen, tærne?","Hva synes du er vanskeligst – å komme i gang eller å holde på?","Vet du hvordan en orm beveger seg ute? Har du sett en?"] },
+  { icon:"🍂", name:"Trampe på løv",               video:null, age:"1-2", sted:"skog", description:"Gå en tur i skogen og finn steder med mange løv. La barna stampe, hoppe og rote i løvhaugene med stor frihet. Hjelp dem å legge merke til lyden og følelsen under føttene. Fremmer sanseintegrasjon og grovmotorikk.", questions:["Hva hører du når du tramper på løvene?","Hvilken farge har løvene? Finn et blad og si fargen!","Hva skjer med løvene når vi kaster dem opp i lufta?"] },
+  { icon:"🪨", name:"Steinesamling",               video:null, age:"1-2", sted:"skog", description:"Gi hvert barn en liten bøtte eller pose. De skal samle steiner av ulik størrelse langs stien. Hjelp dem å sammenlikne: stor og liten, lett og tung, glatt og ru. Trener finmotorikk, begrepsforståelse og konsentrasjon.", questions:["Finn den største steinen du kan løfte! Finn den minste!","Hvordan kjennes steinen ut i hånden – glatt eller ru?","Hva tror du bor under en stor stein?"] },
+  { icon:"💧", name:"Plaske i sølepytter",          video:null, age:"1-2", sted:"skog", description:"Med gummistøvler og regnbukse – la barna gå rett i sølepyttene! Oppmuntre dem til å trampe, hoppe og se hva som skjer med vannet. En rik sensorisk opplevelse som fremmer frimodighet og grovmotorikk.", questions:["Hva skjer med vannet når du tramper i det?","Er vannet kaldt eller varmt? Hva synes du er best?","Kan du lage en stor og en liten sprut? Hva er forskjellen?"] },
+  { icon:"🌿", name:"Gå på ujevnt underlag",        video:null, age:"1-2", sted:"skog", description:"Ta med barna ut i skogen og la dem gå på røtter, greiner, over steiner og i mykt moseunderlag. Gå sakte, hold i hånden ved behov. Ujevnt underlag er utmerket balansetrening og styrker ankler og fotsåler.", questions:["Hva er vanskeligst å gå på – røtter, steiner eller mykt mose?","Hva gjør du med armene dine for å ikke falle?","Hva hører du i skogen? Stå helt stille og lytt."] },
+  { icon:"🎒", name:"Bær pakken din",               video:null, age:"1-2", sted:"skog", description:"La hvert barn bære sin egen lille ryggsekk med et eple, en vannflaske og kanskje en leke. Gå en kort tur i skogen. Gir mestringsfølelse, trener balanse og styrker kjernemuskulaturen.", questions:["Hvordan kjennes det å bære sekken din? Er den tung eller lett?","Hva har du i sekken din? Kan du huske alt?","Hva ville du puttet i sekken hvis du fikk velge selv?"] },
+  { icon:"🏔️", name:"Hinderløype innendørs",       video:null, age:"3-6", sted:"inne", description:"Bygg en hinderløype med puter å hoppe mellom, en stol å kravle under, en madrass å rulle over og en balanseplanke å gå på. Barna løper løypen én og én. Kan gjøres som stafett i to lag. Trener koordinasjon, planlegging og utholdenhet.", questions:["Hvilken hindring synes du var vanskeligst? Hva måtte du gjøre annerledes?","Hva tenkte du på for å holde balansen på planken?","Hvis du fikk lage din egen løype, hvilke hindringer ville du valgt?"] },
+  { icon:"🌉", name:"Putebroen",                    video:null, age:"3-6", sted:"inne", description:"Legg puter på rekke med litt avstand mellom dem – som en bro over et «hav». Barna må hoppe fra pute til pute uten å treffe gulvet. Gjør det vanskeligere ved å øke avstanden. Trener hoppkraft, planlegging og romlig forståelse.", questions:["Hvordan planlegger du neste hopp? Ser du på puten eller på beina dine?","Hva skjer i kroppen din rett før du hopper? Hva gjør armene dine?","Hvorfor tror du det er lettere å hoppe fra et høyt sted enn fra et lavt?"] },
+  { icon:"🪑", name:"Stolsdansen",                  video:null, age:"3-6", sted:"inne", description:"Klassisk stols-dans: én stol færre enn antall barn. Musikk spiller – barna danser rundt stolene. Når musikken stopper, finner alle en stol. Den som ikke finner plass er med og passer på musikken neste runde. Trener reaksjonsevne og sosiale regler.", questions:["Hva gjør du for å finne en ledig stol raskt? Har du en strategi?","Hvordan kjentes det om du ikke fikk plass? Og når du fikk plass?","Hva er fair play i denne leken? Hva er det viktig at vi ikke gjør?"] },
+  { icon:"🤸", name:"Akrobat-stafett",              video:null, age:"3-6", sted:"inne", description:"Del barna i to lag. Stafetten inneholder: én kuvending på madrassen, tre hopp på stedet, krype under to stoler og løpe tilbake. Neste på laget starter når den forrige er tilbake. Trener grovmotorikk, koordinasjon og lagfølelse.", questions:["Hva er det viktigste du gjør for laget ditt i en stafett?","Hvilken del av stafetten krevde mest av kroppen din?","Hva kunne vi endret for å gjøre stafetten enda mer spennende?"] },
+  { icon:"🏗️", name:"Bygg en hule",                video:null, age:"3-6", sted:"inne", description:"Gi barna stoler, tepper, puter og klesklyper. Oppgaven er å bygge en hule de kan krype inn i og sitte i. De planlegger, forhandler og bygger sammen. Fremmer kreativitet, samarbeid og finmotorikk.", questions:["Hvordan bestemte dere hvem som skulle gjøre hva i byggingen?","Hva ville du gjort annerledes neste gang for å gjøre hulen enda bedre?","Hva tror du hule-bygging har til felles med det å bygge et ekte hus?"] },
+  { icon:"🌲", name:"Skogsstafett",                 video:null, age:"3-6", sted:"skog", description:"Merk tre–fire poster mellom trærne med fargerike band. Barna løper i lag fra post til post, henter et lite objekt og bringer det tilbake. Varier traseen: rundt trær, over en stubbe, under en gren. Trener utholdenhet, orientering og lagarbeid.", questions:["Hvordan fant du veien til neste post? Hva hjalp deg å orientere deg?","Hva er lurt å gjøre for å spare krefter i et langt løp?","Hvis du var trener for laget, hva ville du sagt for å motivere dem?"] },
+  { icon:"🪵", name:"Balansegang i skogen",         video:null, age:"3-6", sted:"skog", description:"Finn liggende stokker, store røtter og flate steiner. Barna skal balansere langs dem uten å treffe bakken. Øk vanskelighetsgraden med å be dem bære noe mens de balanserer. Trener balanse, konsentrasjon og kroppsbevissthet.", questions:["Hva gjør du med armene dine for å holde balansen?","Hvor ser du når du balanserer – på bena, på stokkene eller rett frem?","Hva er vanskeligst: å starte, gå i midten eller avslutte? Hvorfor?"] },
+  { icon:"🏕️", name:"Bygg hytte av kvister",       video:null, age:"3-6", sted:"skog", description:"Finn en passe stor bjørk eller furu og len lange kvister mot stammen. Fyll mellomrommene med mose og løv. Jobb i grupper på tre–fire. Test konstruksjonen ved å krype inn. Fremmer samarbeid, naturkunnskap og kreativ problemløsning.", questions:["Hvilke kvister fungerte best – tynne eller tykke? Lange eller korte?","Hva ville du brukt for å tette veggene hvis det begynte å regne?","Dyr lager også hus i skogen. Hvilke dyr vet du om som gjør det?"] },
+  { icon:"🔍", name:"Naturdetektiv-skattejakt",     video:null, age:"3-6", sted:"skog", description:"Lag kort med tegninger: en kongle, et mosebegrodd tre, et fuglerede, en paddehat, en stein ved en bekk. Barna jobber i par for å finne alt på lista. Avslutt med å dele hva de fant og hvor. Fremmer observasjonsevne og naturbevissthet.", questions:["Hva var det vanskeligste å finne? Hvorfor tror du det gjemmer seg der?","Hva la du merke til i skogen i dag som du ikke hadde lagt merke til før?","Hva tror du ville skjedd med skogen hvis alle trærne ble borte?"] },
+  { icon:"🐾", name:"Dyreleken i skogen",           video:null, age:"3-6", sted:"skog", description:"Læreren roper et dyr – barna beveger seg slik det dyret ville gjort: bjørn (krabbe), frosk (hoppe), slange (krype), ørn (løpe med armene ut). Bruk skogen aktivt: klatre over stokker, hoppe over bekken. Trener fantasifullt kroppsspråk og grovmotorikk.", questions:["Hvilket dyr synes du var morsomst å bevege seg som? Hva gjorde det ekstra gøy?","Hva tror du hjelper dyret å bevege seg slik det gjør – klør, bein, vinger?","Hvilke av disse dyrene bor egentlig i den norske skogen?"] }
 ];
 
 // ── Rammeplan-tags ────────────────────────────────────────────────────────
-
 const rammeplantags = {
-  "Pute-klatrefjell":          ["Bevegelsesglede", "Motoriske ferdigheter", "Kroppsbevissthet"],
-  "Kryp under broen":          ["Motoriske ferdigheter", "Bevegelsesglede", "Kroppsbevissthet"],
-  "Dans med skjerf":           ["Bevegelsesglede", "Motoriske ferdigheter", "Selvbilde"],
-  "Rull ballen til hverandre": ["Motoriske ferdigheter", "Bevegelsesglede"],
-  "Ormeløp på madrass":        ["Motoriske ferdigheter", "Bevegelsesglede", "Kroppsbevissthet"],
-  "Trampe på løv":             ["Bevegelsesglede", "Kroppsbevissthet"],
-  "Steinesamling":             ["Motoriske ferdigheter", "Bevegelsesglede"],
-  "Plaske i sølepytter":       ["Bevegelsesglede", "Kroppsbevissthet"],
-  "Gå på ujevnt underlag":     ["Motoriske ferdigheter", "Risikomestring", "Bevegelsesglede"],
-  "Bær pakken din":            ["Motoriske ferdigheter", "Bevegelsesglede", "Selvbilde"],
-  "Hinderløype innendørs":     ["Motoriske ferdigheter", "Risikomestring", "Bevegelsesglede"],
-  "Putebroen":                 ["Motoriske ferdigheter", "Risikomestring", "Bevegelsesglede"],
-  "Stolsdansen":               ["Bevegelsesglede", "Selvbilde", "Grenser"],
-  "Akrobat-stafett":           ["Motoriske ferdigheter", "Bevegelsesglede", "Selvbilde"],
-  "Bygg en hule":              ["Motoriske ferdigheter", "Bevegelsesglede"],
-  "Skogsstafett":              ["Motoriske ferdigheter", "Bevegelsesglede", "Risikomestring"],
-  "Balansegang i skogen":      ["Motoriske ferdigheter", "Risikomestring", "Kroppsbevissthet"],
-  "Bygg hytte av kvister":     ["Bevegelsesglede", "Motoriske ferdigheter"],
-  "Naturdetektiv-skattejakt":  ["Bevegelsesglede", "Motoriske ferdigheter"],
-  "Dyreleken i skogen":        ["Bevegelsesglede", "Motoriske ferdigheter", "Kroppsbevissthet"]
+  "Pute-klatrefjell":          ["Bevegelsesglede","Motoriske ferdigheter","Kroppsbevissthet"],
+  "Kryp under broen":          ["Motoriske ferdigheter","Bevegelsesglede","Kroppsbevissthet"],
+  "Dans med skjerf":           ["Bevegelsesglede","Motoriske ferdigheter","Selvbilde"],
+  "Rull ballen til hverandre": ["Motoriske ferdigheter","Bevegelsesglede"],
+  "Ormeløp på madrass":        ["Motoriske ferdigheter","Bevegelsesglede","Kroppsbevissthet"],
+  "Trampe på løv":             ["Bevegelsesglede","Kroppsbevissthet"],
+  "Steinesamling":             ["Motoriske ferdigheter","Bevegelsesglede"],
+  "Plaske i sølepytter":       ["Bevegelsesglede","Kroppsbevissthet"],
+  "Gå på ujevnt underlag":     ["Motoriske ferdigheter","Risikomestring","Bevegelsesglede"],
+  "Bær pakken din":            ["Motoriske ferdigheter","Bevegelsesglede","Selvbilde"],
+  "Hinderløype innendørs":     ["Motoriske ferdigheter","Risikomestring","Bevegelsesglede"],
+  "Putebroen":                 ["Motoriske ferdigheter","Risikomestring","Bevegelsesglede"],
+  "Stolsdansen":               ["Bevegelsesglede","Selvbilde","Grenser"],
+  "Akrobat-stafett":           ["Motoriske ferdigheter","Bevegelsesglede","Selvbilde"],
+  "Bygg en hule":              ["Motoriske ferdigheter","Bevegelsesglede"],
+  "Skogsstafett":              ["Motoriske ferdigheter","Bevegelsesglede","Risikomestring"],
+  "Balansegang i skogen":      ["Motoriske ferdigheter","Risikomestring","Kroppsbevissthet"],
+  "Bygg hytte av kvister":     ["Bevegelsesglede","Motoriske ferdigheter"],
+  "Naturdetektiv-skattejakt":  ["Bevegelsesglede","Motoriske ferdigheter"],
+  "Dyreleken i skogen":        ["Bevegelsesglede","Motoriske ferdigheter","Kroppsbevissthet"]
 };
 
-// ── YouTube-hjelper ───────────────────────────────────────────────────────
+// ── Voksenspørsmål ────────────────────────────────────────────────────────
+const voksneKategorier = [
+  { tittel:"Deltakelse og nærvær", sporsmal:[
+    { tekst:"Hvor aktive og deltakende er vi voksne i lekene – beveger vi kroppen selv, eller observerer vi fra sidelinjen?", kilde:"CLASS: Emotional Support – Teacher Sensitivity & Positive Climate" },
+    { tekst:"Er vi sensitive for enkeltbarns signaler under aktivitet – ser vi hvem som er spent, redd, ukomfortabel eller ivrer etter mer?", kilde:"CLASS: Teacher Sensitivity; Rammeplan (2017) – omsorg og trygghet" },
+    { tekst:"Bruker vi kroppen som modell ved å vise bevegelser selv, fremfor å bare instruere verbalt?", kilde:"Storli & Hagen (2010) – voksnes rolle i fysisk lek; CLASS: Instructional Support" },
+    { tekst:"Smitter vår egen glede og energi over på barna – hva kommuniserer kroppsspråket og stemmen vår under aktiviteten?", kilde:"CLASS: Positive Climate; Løkken (2004) – toddlernes kroppslige væremåte" }
+  ]},
+  { tittel:"Tilpasning og inkludering", sporsmal:[
+    { tekst:"Tilpasser vi vanskelighetsgraden slik at alle barn – uavhengig av motorisk nivå – opplever mestring og utfordring?", kilde:"ECERS-R: Motor Activities; CLASS: Regard for Student Perspectives" },
+    { tekst:"Reflekterer vi jevnlig over hvilke barn som sjelden deltar aktivt i fysiske aktiviteter, og hva som kan være grunnen?", kilde:"I-TERS: Active Physical Play; NOU 2012:1 – til barnas beste" },
+    { tekst:"Er vi bevisste på å inkludere barn med ulik bakgrunn, funksjonsnivå og temperament i de fysiske aktivitetene?", kilde:"Rammeplan (2017) – likeverd og inkludering" },
+    { tekst:"Gir vi barna tid nok til å prøve og feile uten at vi griper inn for raskt – og skaper vi rom for risikomestring?", kilde:"Sandseter (2010) – thrilling play outdoors; CLASS: Regard for Student Perspectives" }
+  ]},
+  { tittel:"Pedagogisk planlegging og intensjon", sporsmal:[
+    { tekst:"Har vi en bevisst pedagogisk intensjon bak de fysiske aktivitetene vi velger, eller er det primært aktivering?", kilde:"Rammeplan (2017) – kropp, bevegelse, mat og helse" },
+    { tekst:"Balanserer vi voksenstyrte og barnestyrte bevegelsesaktiviteter i løpet av uken?", kilde:"CLASS: Regard for Student Perspectives; Tholin (2013) – barnehagens innhold" },
+    { tekst:"Planlegger vi aktiviteter som stimulerer ulike motoriske kvaliteter: balanse, koordinasjon, styrke, hurtighet og romfølelse?", kilde:"ECERS-R: Motor Activities; Eid & Brattenborg (2012)" },
+    { tekst:"Tar vi barnas egne bevegelsesinitiativ og ideer aktivt inn i planleggingen av neste aktivitet?", kilde:"CLASS: Regard for Student Perspectives; Rammeplan (2017) – barns medvirkning" }
+  ]},
+  { tittel:"Språk, samspill og scaffolding", sporsmal:[
+    { tekst:"Bruker vi beskrivende fagspråk knyttet til kropp og bevegelse aktivt underveis – f.eks. 'du bruker kjernemuskelen din nå'?", kilde:"CLASS: Language Modeling; Vygotsky – sonen for nærmeste utvikling" },
+    { tekst:"Stiller vi åpne spørsmål under aktiviteten som støtter barnas refleksjon over egne bevegelser og valg?", kilde:"CLASS: Concept Development & Quality of Feedback" },
+    { tekst:"Gir vi konkret og anerkjennende tilbakemelding som beskriver hva barnet gjør, fremfor bare generell ros?", kilde:"CLASS: Quality of Feedback; Dweck (2006) – growth mindset" },
+    { tekst:"Støtter vi barna i å hjelpe og vise hverandre – legger vi til rette for jevnalderscaffolding?", kilde:"Vygotsky – proksimal utviklingssone; CLASS: Instructional Support" }
+  ]},
+  { tittel:"Refleksjon og profesjonell utvikling", sporsmal:[
+    { tekst:"Dokumenterer vi barnas motoriske utvikling og bruker observasjoner aktivt som grunnlag for videre planlegging?", kilde:"Rammeplan (2017) – dokumentasjon og vurdering" },
+    { tekst:"Drøfter vi i personalgruppen hva god kvalitet i fysisk aktivitet konkret betyr for vår barnegruppe?", kilde:"CLASS: Overall Quality; Gotvassli (2013) – barnehagen som lærende organisasjon" },
+    { tekst:"Legger vi bevisst til rette for at barna kan ta risiko og oppleve spenning innenfor trygge rammer?", kilde:"Sandseter (2010) – risky play; Helsedirektoratet (2021)" },
+    { tekst:"Ser vi og synliggjør vi sammenhengen mellom fysisk aktivitet og barnas trivsel, konsentrasjon og sosiale samspill?", kilde:"Helsedirektoratet (2021) – anbefalinger om fysisk aktivitet; CLASS: Emotional Support" }
+  ]}
+];
+
+// ── Basisferdigheter ──────────────────────────────────────────────────────
+const basisKategorier = [
+  { icon:"🥾", tittel:"Turplanlegging", punkter:["Tilpass rutens lengde til alderen: 1–2 år: 20–30 min gange; 3–6 år: 45–90 min","Varsle alltid noen om ruten og forventet tilbakomsttid","Tell barna jevnlig – bruk et fast tellesystem","Tilpass farten til det sakteste barnet og gi rom for stopp og undring underveis","Avtal et «stopp-sted» – et tydelig punkt alle vet de skal samles ved hvis noen blir borte","Ha med: ekstra klær, plaster, mat og vann, mobiltelefon, kart eller kjennskap til området"], tips:{tittel:"Godt råd",tekst:"Gå ruten selv i forkant første gang – finn naturlige stoppunkter, vurder terreng og identifiser eventuelle farer."}, ressurser:[{type:"yt",tekst:"Søk: turer med barn friluftsliv",url:"https://www.youtube.com/results?search_query=turer+med+barn+friluftsliv+barnehage"},{type:"web",tekst:"Friluftsrådenes idéperm",url:"https://www.friluftsrad.no/arbeidsomrader/skole-og-barnehage/undervisningsideer/barnehage/idepermen-barn-i-friluft"}] },
+  { icon:"🔥", tittel:"Bål og brannsikkerhet", punkter:["Bålbrenning er forbudt i utmark 15. april–15. september – sjekk alltid lokale regler","Velg et trygt sted: unngå tørr vegetasjon, ta hensyn til vindretning","Lag et tydelig sikkerhetsområde rundt bålet – barna holder seg utenfor","Ha alltid vann eller sand klar for slukking før dere tenner","La barna delta trygt: samle kvister, stable opp – alltid med voksen tett på","Aldri la barna alene ved et tent bål – ikke engang et øyeblikk","Slukk grundig: rør rundt med pinne og vann til asken er kald"], tips:{tittel:"Med de minste",tekst:"For 1–2-åringer er det å se på og kjenne varmen fra trygg avstand en rik opplevelse. Ikke press deltakelse."}, ressurser:[{type:"yt",tekst:"Søk: hvordan tenne bål riktig",url:"https://www.youtube.com/results?search_query=hvordan+tenne+b%C3%A5l+riktig+natur"},{type:"web",tekst:"Friute.no – bålfyring",url:"https://friute.no/a-tenne-et-bal-enkel-balfyring/"},{type:"web",tekst:"Miljødirektoratet – bålregler",url:"https://www.miljodirektoratet.no/ansvarsomrader/friluftsliv/friluftsliv-og-allemannsretten/tenne-bal/"}] },
+  { icon:"🍳", tittel:"Matlaging ute", punkter:["Sjekk allergier og diettbehov i barnegruppa før du planlegger menyen","Enkle retter fungerer best: pinnebrød, banangryte i folie, suppe på primus","Hygiene: ta med våtservietter eller håndsprit – vask hender før matlaging","Vær forsiktig med varm mat og drikke til de minste – test alltid temperaturen","La barna medvirke: forme brøddeigen, røre i gryta, pakke maten sin","Mat smaker alltid bedre ute – bruk det bevisst som motivasjon for turen"], tips:{tittel:"Kobling til Rammeplan",tekst:"Matlaging ute er direkte knyttet til målet om «innsikt i matens opprinnelse og veien fra mat til måltid»."}, ressurser:[{type:"yt",tekst:"Søk: pinnebrød og matlaging ute barn",url:"https://www.youtube.com/results?search_query=pinnebr%C3%B8d+matlaging+ute+barn"},{type:"web",tekst:"Matjungelen – matlaging i barnehage",url:"https://barnehage.matjungelen.no/tema/matlaging/"},{type:"web",tekst:"Espira – mat på bålet",url:"https://espira.no/bevegelse/best-mat-pa-balet"}] },
+  { icon:"🩹", tittel:"Sikkerhet og førstehjelp", punkter:["Ha alltid mobiltelefon med nok batteri og nødnumrene lett tilgjengelig","Nødnumre: 113 (ambulanse) · 112 (politi) · 110 (brann)","Sår og skrubbsår: skyll godt med vann, tørk og legg plaster","Fall og støt: vurder bevegelse og smertenivå – ring 113 ved mistanke om skade","Insektstikk: fjern brodden med neglen (ikke klyp), avkjøl med kaldt vann","Ukjente planter og bær: vi spiser aldri noe vi ikke kjenner – lær barna dette","Kjenn barna godt: hvem har allergier, hvem er medisinert, hvem er redd for noe"], tips:{tittel:"Viktig rutine",tekst:"Gå gjennom en enkel sikkerhetsbriefing med barna før hver tur: hvem vi er med, hva vi gjør hvis noen blir borte."}, ressurser:[{type:"yt",tekst:"Søk: førstehjelp barn norsk",url:"https://www.youtube.com/results?search_query=f%C3%B8rstehjelp+barn+norsk+kurs"},{type:"web",tekst:"Røde Kors – kurs for barn",url:"https://www.rodekorsforstehjelp.no/produkter/forstehjelpskurs-barn-15-time-onlinekurs-lsfhkb/"},{type:"web",tekst:"Naturens som læringsarena",url:"https://naturensomlaeringsarena.no/%C3%A5rshjul-for-uteskole/f%C3%B8rstehjelp"}] },
+  { icon:"🧥", tittel:"Klær og utstyr", punkter:["Lagprinsippet: innerlag (ullundertøy) → mellomlag (fleece) → ytterlag (regntøy/vindtett)","«Det finnes ikke dårlig vær – bare dårlig klær»: god påkledning gjør turen god","Skift alltid til tørt tøy etter lek i vann, søle eller snø","Ha alltid et ekstra sett klær i sekken per barn – spesielt til 1–3-åringer","Sommer: solkrem (minimum SPF 30) og solhatt er obligatorisk på solrike dager","Skotøy: gummistøvler for sølete dager, støvler med god støtte for skog og terreng"], tips:{tittel:"Praktisk tips",tekst:"Merk alltid barneklærne tydelig med navn – spesielt ekstrasettene."}, ressurser:[{type:"yt",tekst:"Søk: lagprinsippet påkledning friluftsliv",url:"https://www.youtube.com/results?search_query=lagprinsippet+p%C3%A5kledning+friluftsliv+barn"},{type:"web",tekst:"Norsk Friluftsliv – tips",url:"https://norskfriluftsliv.no/tips-og-inspirasjon/tips-til-uteaktiviteter-for-barn-og-voksne"}] },
+  { icon:"🌿", tittel:"Naturkunnskap med barn", punkter:["Lær barna noen få, gjenkjennelige treslag: bjørk, gran, furu – start enkelt","Årstidene som pedagogikk: følg naturens forandringer gjennom hele året","Spor og tegn: se etter fotavtrykk, gnag på kongler, reir og hull i trær","Edderkopper og insekter er ikke farlige – normaliser nysgjerrighet fremfor frykt","Bruk sansene aktivt: lukt på jord og mose, kjenn på bark, lytt etter fugler","La barna styre utforskningen – følg barnas nysgjerrighet fremfor egne planer"], tips:{tittel:"Kobling til Rammeplan",tekst:"Naturkunnskap er bro mellom Natur, miljø og teknologi og Kropp, bevegelse, mat og helse."}, ressurser:[{type:"yt",tekst:"Søk: natur og friluftsliv barnehage",url:"https://www.youtube.com/results?search_query=natur+friluftsliv+barnehage+pedagogikk"},{type:"web",tekst:"Forskerfrø – friluftsliv",url:"https://www.xn--forskerfr-t8a.no/artikkel/vis.html?tid=2243242"},{type:"web",tekst:"Friluftsrådenes Landsforbund",url:"https://www.friluftsrad.no/arbeidsomrader/skole-og-barnehage/laering-i-friluft"}] }
+];
+
+// ── State ──────────────────────────────────────────────────────────────────
+let favorites   = JSON.parse(localStorage.getItem('nhb_favorites') || '[]');
+let evChecked   = JSON.parse(localStorage.getItem('nhb_ev') || '[]');
+let activeFilter = 'alle';
+let activeRpTag  = null;
+let searchQuery  = '';
+
+// ── Helpers ────────────────────────────────────────────────────────────────
+function slugify(name) { return name.toLowerCase().replace(/\s+/g,'-').replace(/[æ]/g,'ae').replace(/[ø]/g,'oe').replace(/[å]/g,'aa').replace(/[^a-z0-9-]/g,''); }
 
 function getYouTubeId(url) {
   if (!url) return null;
-  const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([A-Za-z0-9_-]{11})/);
-  return match ? match[1] : null;
+  const m = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([A-Za-z0-9_-]{11})/);
+  return m ? m[1] : null;
 }
 
-function videoHtml(videoUrl) {
-  const id = getYouTubeId(videoUrl);
-  if (id) {
-    return `<div class="video-wrapper">
-      <iframe src="https://www.youtube.com/embed/${id}" allowfullscreen loading="lazy"></iframe>
-    </div>`;
-  }
+function videoHtml(url) {
+  const id = getYouTubeId(url);
+  if (id) return `<div class="video-wrapper"><iframe src="https://www.youtube.com/embed/${id}" allowfullscreen loading="lazy"></iframe></div>`;
   return `<div class="video-placeholder">Video ikke lagt til ennå</div>`;
 }
 
-// ── Render aktiviteter ────────────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
 
-const listEl   = document.getElementById("activity-list");
-const emptyMsg = document.getElementById("empty-msg");
+// ── Favorites ──────────────────────────────────────────────────────────────
+function isFav(name) { return favorites.includes(name); }
+function toggleFav(name, e) {
+  e.stopPropagation();
+  if (isFav(name)) favorites = favorites.filter(f => f !== name);
+  else favorites.push(name);
+  localStorage.setItem('nhb_favorites', JSON.stringify(favorites));
+  renderActivities(activeFilter);
+}
+
+// ── Share ──────────────────────────────────────────────────────────────────
+function shareActivity(name) {
+  const url = location.origin + location.pathname + '?a=' + encodeURIComponent(name);
+  if (navigator.share) {
+    navigator.share({ title: name, url }).catch(() => {});
+  } else {
+    navigator.clipboard.writeText(url).then(() => showToast('Lenke kopiert!'));
+  }
+}
+
+// ── Print ──────────────────────────────────────────────────────────────────
+function printActivity(name) {
+  document.querySelectorAll('.activity-card').forEach(c => c.classList.remove('printing'));
+  const uid = slugify(name);
+  const card = document.getElementById('card-' + uid);
+  if (card) { card.classList.add('printing'); window.print(); }
+}
+
+// ── RP Tag filter ──────────────────────────────────────────────────────────
+function buildRpTagBar() {
+  const allTags = [...new Set(Object.values(rammeplantags).flat())].sort();
+  const bar = document.getElementById('rp-tag-bar');
+  bar.innerHTML = '';
+  allTags.forEach(tag => {
+    const btn = document.createElement('button');
+    btn.className = 'rp-filter-tag' + (activeRpTag === tag ? ' active' : '');
+    btn.textContent = tag;
+    btn.onclick = () => {
+      activeRpTag = activeRpTag === tag ? null : tag;
+      buildRpTagBar();
+      renderActivities(activeFilter);
+    };
+    bar.appendChild(btn);
+  });
+}
+
+// ── Render aktiviteter ─────────────────────────────────────────────────────
+const listEl   = document.getElementById('activity-list');
+const emptyMsg = document.getElementById('empty-msg');
+
+function getVisible(filter) {
+  return activities.filter(a => {
+    const matchFilter =
+      filter === 'alle'       ? true :
+      filter === 'favoritter' ? isFav(a.name) :
+      filter === '1-2'        ? a.age === '1-2' :
+      filter === '3-6'        ? a.age === '3-6' :
+      filter === 'inne'       ? a.sted === 'inne' :
+      filter === 'skog'       ? a.sted === 'skog' : true;
+    const matchSearch = !searchQuery || a.name.toLowerCase().includes(searchQuery) || a.description.toLowerCase().includes(searchQuery);
+    const matchTag    = !activeRpTag || (rammeplantags[a.name] || []).includes(activeRpTag);
+    return matchFilter && matchSearch && matchTag;
+  });
+}
 
 function renderActivities(filter) {
-  listEl.innerHTML = "";
-  const groups = { "1-2": activities.filter(a => a.age === "1-2"), "3-6": activities.filter(a => a.age === "3-6") };
-  let total = 0;
+  activeFilter = filter;
+  listEl.innerHTML = '';
+  const visible = getVisible(filter);
+  emptyMsg.classList.toggle('hidden', visible.length > 0);
+
+  const groups = { '1-2': visible.filter(a => a.age === '1-2'), '3-6': visible.filter(a => a.age === '3-6') };
 
   for (const [age, group] of Object.entries(groups)) {
-    const visible = group.filter(a => {
-      if (filter === "alle") return true;
-      if (filter === "1-2" || filter === "3-6") return a.age === filter;
-      return a.sted === filter;
-    });
-    if (!visible.length) continue;
-    total += visible.length;
+    if (!group.length) continue;
+    const section = document.createElement('div');
+    section.className = 'age-section';
+    section.innerHTML = `<div class="age-heading">${age === '1-2' ? '1–2 år' : '3–6 år'}</div>`;
 
-    const section = document.createElement("div");
-    section.className = "age-section";
-    const heading = document.createElement("div");
-    heading.className = "age-heading";
-    heading.textContent = age === "1-2" ? "1–2 år" : "3–6 år";
-    section.appendChild(heading);
+    group.forEach(activity => {
+      const uid  = slugify(activity.name);
+      const tags = rammeplantags[activity.name] || [];
+      const fav  = isFav(activity.name);
+      const stedLabel = activity.sted === 'inne' ? 'Inne' : 'Skog';
+      const stedClass = activity.sted === 'inne' ? 'tag-inne' : 'tag-skog';
+      const reflection = localStorage.getItem('nhb_ref_' + uid) || '';
 
-    visible.forEach((activity, idx) => {
-      const uid = activity.age + "-" + idx;
-      const card = document.createElement("div");
-      card.className = "activity-card";
-      const stedLabel = activity.sted === "inne" ? "Inne" : "Skog";
-      const stedClass = activity.sted === "inne" ? "tag-inne" : "tag-skog";
+      const card = document.createElement('div');
+      card.className = 'activity-card';
+      card.id = 'card-' + uid;
       card.innerHTML = `
         <div class="card-header" onclick="toggleCard('${uid}')">
           <div class="card-left">
@@ -1223,45 +716,91 @@ function renderActivities(filter) {
             <div>
               <div class="card-name">${activity.name}</div>
               <div class="tag-row">
-                <span class="tag tag-age">${activity.age === "1-2" ? "1–2 år" : "3–6 år"}</span>
+                <span class="tag tag-age">${age === '1-2' ? '1–2 år' : '3–6 år'}</span>
                 <span class="tag ${stedClass}">${stedLabel}</span>
               </div>
             </div>
           </div>
-          <svg class="chevron" id="chev-${uid}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="6 9 12 15 18 9"></polyline>
-          </svg>
+          <div class="card-actions">
+            <button class="fav-btn" onclick="toggleFav('${activity.name}',event)" title="${fav ? 'Fjern fra favoritter' : 'Legg til favoritter'}">${fav ? '❤️' : '🤍'}</button>
+            <svg class="chevron" id="chev-${uid}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </div>
         </div>
         <div class="card-body" id="body-${uid}">
           <p class="description">${activity.description}</p>
-          ${(rammeplantags[activity.name] || []).length ? `
-            <span class="rp-label">Rammeplan – kropp, bevegelse, mat og helse</span>
-            <div class="rammeplan-tags">
-              ${(rammeplantags[activity.name] || []).map(t => `<span class="tag-rp">${t}</span>`).join("")}
-            </div>` : ""}
-          ${videoHtml(activity.video || null)}
+          ${tags.length ? `<span class="rp-label">Rammeplan – kropp, bevegelse, mat og helse</span><div class="rammeplan-tags">${tags.map(t => `<span class="tag-rp">${t}</span>`).join('')}</div>` : ''}
+          ${videoHtml(activity.video)}
           <div class="questions-heading">Didaktiske refleksjonsspørsmål</div>
-          <ul class="questions-list">
-            ${activity.questions.map((q, i) =>
-              `<li><span class="q-num">${i + 1}.</span><span>${q}</span></li>`
-            ).join("")}
-          </ul>
+          <ul class="questions-list">${activity.questions.map((q,i) => `<li><span class="q-num">${i+1}.</span><span>${q}</span></li>`).join('')}</ul>
+          <div class="card-action-row">
+            <button class="card-action-btn btn-share" onclick="shareActivity('${activity.name}')">🔗 Del aktivitet</button>
+            <button class="card-action-btn btn-print" onclick="printActivity('${activity.name}')">🖨️ Skriv ut</button>
+          </div>
+          <div class="reflection-section">
+            <span class="reflection-label">Refleksjonsnotat</span>
+            <textarea class="reflection-textarea" id="ref-${uid}" placeholder="Skriv ned observasjoner eller tanker etter aktiviteten..." oninput="saveReflection('${uid}',this.value)">${reflection}</textarea>
+            ${reflection ? `<div class="reflection-saved">Lagret</div>` : ''}
+          </div>
         </div>`;
       section.appendChild(card);
     });
     listEl.appendChild(section);
   }
-  emptyMsg.classList.toggle("hidden", total > 0);
+
+  // Auto-open from URL
+  const params = new URLSearchParams(location.search);
+  const aParam = params.get('a');
+  if (aParam) {
+    const uid = slugify(aParam);
+    setTimeout(() => openCard(uid), 100);
+  }
 }
 
 function toggleCard(uid) {
-  const body = document.getElementById("body-" + uid);
-  const chev = document.getElementById("chev-" + uid);
-  chev.classList.toggle("open", body.classList.toggle("open"));
+  const body = document.getElementById('body-' + uid);
+  const chev = document.getElementById('chev-' + uid);
+  chev.classList.toggle('open', body.classList.toggle('open'));
+  if (body.classList.contains('open')) body.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
-// ── Rammeplan-data ────────────────────────────────────────────────────────
+function openCard(uid) {
+  const body = document.getElementById('body-' + uid);
+  const chev = document.getElementById('chev-' + uid);
+  if (body && !body.classList.contains('open')) {
+    body.classList.add('open');
+    chev && chev.classList.add('open');
+    body.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+}
 
+// ── Reflection log ────────────────────────────────────────────────────────
+function saveReflection(uid, text) {
+  localStorage.setItem('nhb_ref_' + uid, text);
+  const saved = document.querySelector('#body-' + uid + ' .reflection-saved');
+  if (saved) saved.textContent = 'Lagret';
+  else {
+    const ta = document.getElementById('ref-' + uid);
+    if (ta) { const d = document.createElement('div'); d.className = 'reflection-saved'; d.textContent = 'Lagret'; ta.after(d); }
+  }
+}
+
+// ── Random activity ───────────────────────────────────────────────────────
+function randomActivity() {
+  const visible = getVisible(activeFilter).filter(a => ['alle','1-2','3-6','inne','skog','favoritter'].includes(activeFilter) || true);
+  const pool = activities;
+  if (!pool.length) return;
+  const pick = pool[Math.floor(Math.random() * pool.length)];
+  // Switch to activity view if needed
+  if (['voksne','rammeplan','basis','inspirasjon'].includes(activeFilter)) {
+    setFilter('alle');
+  }
+  setTimeout(() => {
+    const uid = slugify(pick.name);
+    openCard(uid);
+  }, 150);
+}
+
+// ── Rammeplan ────────────────────────────────────────────────────────────
 const rpMal = [
   "Oppleve trivsel, glede og mestring ved allsidige bevegelseserfaringer inne og ute – hele året",
   "Bli kjent med egne behov, få kjennskap til menneskekroppen og utvikle gode vaner for hygiene og variert kosthold",
@@ -1271,7 +810,6 @@ const rpMal = [
   "Sette grenser for egen kropp og respektere andres grenser",
   "Få innsikt i matens opprinnelse, produksjon av matvarer og veien fra mat til måltid"
 ];
-
 const rpPersonal = [
   "Være aktive og tilstedeværende voksne – støtte og utfordre barna til variert kroppslig lek",
   "Bidra til at barna tilegner seg gode vaner, holdninger og kunnskaper om kost, hygiene, aktivitet og hvile",
@@ -1282,254 +820,156 @@ const rpPersonal = [
 ];
 
 function renderRammeplan() {
-  const malList = document.getElementById("rp-mal-list");
-  const personalList = document.getElementById("rp-personal-list");
-  if (malList.children.length) return;
-  rpMal.forEach(t => {
-    malList.innerHTML += `<li><span class="dot">●</span><span>${t}</span></li>`;
-  });
-  rpPersonal.forEach(t => {
-    personalList.innerHTML += `<li><span class="dot">●</span><span>${t}</span></li>`;
-  });
+  const ml = document.getElementById('rp-mal-list');
+  const pl = document.getElementById('rp-personal-list');
+  if (ml.children.length) return;
+  rpMal.forEach(t => { ml.innerHTML += `<li><span class="dot">●</span><span>${t}</span></li>`; });
+  rpPersonal.forEach(t => { pl.innerHTML += `<li><span class="dot">●</span><span>${t}</span></li>`; });
 }
 
-// ── Basisferdigheter-data ─────────────────────────────────────────────────
-
-const basisKategorier = [
-  {
-    icon: "🥾",
-    tittel: "Turplanlegging",
-    punkter: [
-      "Tilpass rutens lengde til alderen: 1–2 år: 20–30 min gange; 3–6 år: 45–90 min",
-      "Varsle alltid noen om ruten og forventet tilbakomsttid",
-      "Tell barna jevnlig – bruk et fast tellesystem",
-      "Tilpass farten til det sakteste barnet og gi rom for stopp og undring underveis",
-      "Avtal et «stopp-sted» – et tydelig punkt alle vet de skal samles ved hvis noen blir borte",
-      "Ha med: ekstra klær, plaster, mat og vann, mobiltelefon, kart eller kjennskap til området"
-    ],
-    tips: { tittel: "Godt råd", tekst: "Gå ruten selv i forkant første gang – finn naturlige stoppunkter, vurder terreng og identifiser eventuelle farer." },
-    ressurser: [
-      { type: "yt", tekst: "Søk: turer med barn friluftsliv", url: "https://www.youtube.com/results?search_query=turer+med+barn+friluftsliv+barnehage" },
-      { type: "web", tekst: "Friluftsrådenes idéperm", url: "https://www.friluftsrad.no/arbeidsomrader/skole-og-barnehage/undervisningsideer/barnehage/idepermen-barn-i-friluft" },
-      { type: "web", tekst: "Norsk Friluftsliv – tips", url: "https://norskfriluftsliv.no/tips-og-inspirasjon/tips-til-uteaktiviteter-for-barn-og-voksne" }
-    ]
-  },
-  {
-    icon: "🔥",
-    tittel: "Bål og brannsikkerhet",
-    punkter: [
-      "Bålbrenning er forbudt i utmark 15. april–15. september – sjekk alltid lokale regler",
-      "Velg et trygt sted: unngå tørr vegetasjon, ta hensyn til vindretning",
-      "Lag et tydelig sikkerhetsområde rundt bålet – barna holder seg utenfor",
-      "Ha alltid vann eller sand klar for slukking før dere tenner",
-      "La barna delta trygt: samle kvister, stable opp – alltid med voksen tett på",
-      "Aldri la barna alene ved et tent bål – ikke engang et øyeblikk",
-      "Slukk grundig: rør rundt med pinne og vann til asken er kald"
-    ],
-    tips: { tittel: "Med de minste", tekst: "For 1–2-åringer er det å se på og kjenne varmen fra trygg avstand en rik opplevelse i seg selv. Ikke press deltakelse." },
-    ressurser: [
-      { type: "yt", tekst: "Søk: hvordan tenne bål riktig", url: "https://www.youtube.com/results?search_query=hvordan+tenne+b%C3%A5l+riktig+natur" },
-      { type: "web", tekst: "Friute.no – bålfyring (med videoer)", url: "https://friute.no/a-tenne-et-bal-enkel-balfyring/" },
-      { type: "web", tekst: "Miljødirektoratet – bålregler", url: "https://www.miljodirektoratet.no/ansvarsomrader/friluftsliv/friluftsliv-og-allemannsretten/tenne-bal/" }
-    ]
-  },
-  {
-    icon: "🍳",
-    tittel: "Matlaging ute",
-    punkter: [
-      "Sjekk allergier og diettbehov i barnegruppa før du planlegger menyen",
-      "Enkle retter fungerer best: pinnebrød, banangryte i folie, suppe på primus",
-      "Hygiene: ta med våtservietter eller håndsprit – vask hender før matlaging",
-      "Vær forsiktig med varm mat og drikke til de minste – test alltid temperaturen",
-      "La barna medvirke: forme brøddeigen, røre i gryta, pakke maten sin",
-      "Mat smaker alltid bedre ute – bruk det bevisst som motivasjon for turen"
-    ],
-    tips: { tittel: "Kobling til Rammeplan", tekst: "Matlaging ute er direkte knyttet til målet om «innsikt i matens opprinnelse og veien fra mat til måltid» – og skaperglede." },
-    ressurser: [
-      { type: "yt", tekst: "Søk: pinnebrød og matlaging ute barn", url: "https://www.youtube.com/results?search_query=pinnebr%C3%B8d+matlaging+ute+barn" },
-      { type: "web", tekst: "Matjungelen – matlaging i barnehage", url: "https://barnehage.matjungelen.no/tema/matlaging/" },
-      { type: "web", tekst: "Espira – mat på bålet", url: "https://espira.no/bevegelse/best-mat-pa-balet" }
-    ]
-  },
-  {
-    icon: "🩹",
-    tittel: "Sikkerhet og førstehjelp",
-    punkter: [
-      "Ha alltid mobiltelefon med nok batteri og nødnumrene lett tilgjengelig",
-      "Nødnumre: 113 (ambulanse) · 112 (politi) · 110 (brann)",
-      "Sår og skrubbsår: skyll godt med vann, tørk og legg plaster – ro og anerkjennelse virker",
-      "Fall og støt: vurder bevegelse og smertenivå – ring 113 ved mistanke om skade",
-      "Insektstikk: fjern brodden med neglen (ikke klyp), avkjøl med kaldt vann",
-      "Ukjente planter og bær: lær barna regelen – vi spiser aldri noe vi ikke kjenner",
-      "Kjenn barna godt: hvem har allergier, hvem er medisinert, hvem er redd for noe"
-    ],
-    tips: { tittel: "Viktig rutine", tekst: "Gå gjennom en enkel sikkerhetsbriefing med barna før hver tur: hvem vi er med, hva vi gjør hvis noen blir borte, og stopp-stedet." },
-    ressurser: [
-      { type: "yt", tekst: "Søk: førstehjelp barn norsk", url: "https://www.youtube.com/results?search_query=f%C3%B8rstehjelp+barn+norsk+kurs" },
-      { type: "web", tekst: "Røde Kors – kurs for barn", url: "https://www.rodekorsforstehjelp.no/produkter/forstehjelpskurs-barn-15-time-onlinekurs-lsfhkb/" },
-      { type: "web", tekst: "Naturens som læringsarena – sikkerhet", url: "https://naturensomlaeringsarena.no/%C3%A5rshjul-for-uteskole/f%C3%B8rstehjelp" }
-    ]
-  },
-  {
-    icon: "🧥",
-    tittel: "Klær og utstyr",
-    punkter: [
-      "Lagprinsippet: innerlag (ullundertøy) → mellomlag (fleece) → ytterlag (regntøy/vindtett)",
-      "«Det finnes ikke dårlig vær – bare dårlig klær»: god påkledning gjør turen god",
-      "Skift alltid til tørt tøy etter lek i vann, søle eller snø",
-      "Ha alltid et ekstra sett klær i sekken per barn – spesielt til 1–3-åringer",
-      "Sommer: solkrem (minimum SPF 30) og solhatt er obligatorisk på solrike dager",
-      "Skotøy: gummistøvler for sølete dager, støvler med god støtte og gummisåle for skog og terreng"
-    ],
-    tips: { tittel: "Praktisk tips", tekst: "Merk alltid barneklærne tydelig med navn – spesielt ekstrasettene. Det sparer mye tid og frustrasjon." },
-    ressurser: [
-      { type: "yt", tekst: "Søk: lagprinsippet påkledning friluftsliv", url: "https://www.youtube.com/results?search_query=lagprinsippet+p%C3%A5kledning+friluftsliv+barn" },
-      { type: "web", tekst: "Norsk Friluftsliv – vinteraktiviteter", url: "https://norskfriluftsliv.no/tips-og-inspirasjon/10-morsomme-vinteraktiviteter-med-barn" }
-    ]
-  },
-  {
-    icon: "🌿",
-    tittel: "Naturkunnskap med barn",
-    punkter: [
-      "Lær barna noen få, gjenkjennelige treslag: bjørk, gran, furu – start enkelt",
-      "Årstidene som pedagogikk: følg naturens forandringer gjennom hele året",
-      "Spor og tegn: se etter fotavtrykk, gnag på kongler, reir og hull i trær",
-      "Edderkopper og insekter er ikke farlige – normaliser nysgjerrighet fremfor frykt",
-      "Bruk sansene aktivt: lukt på jord og mose, kjenn på bark, lytt etter fugler",
-      "La barna styre utforskningen – følg barnas nysgjerrighet fremfor egne planer"
-    ],
-    tips: { tittel: "Kobling til Rammeplan", tekst: "Naturkunnskap er bro mellom fagområdene Natur, miljø og teknologi og Kropp, bevegelse, mat og helse." },
-    ressurser: [
-      { type: "yt", tekst: "Søk: natur og friluftsliv barnehage", url: "https://www.youtube.com/results?search_query=natur+friluftsliv+barnehage+pedagogikk" },
-      { type: "web", tekst: "Forskerfrø – friluftsliv", url: "https://www.xn--forskerfr-t8a.no/artikkel/vis.html?tid=2243242" },
-      { type: "web", tekst: "Friluftsrådenes Landsforbund", url: "https://www.friluftsrad.no/arbeidsomrader/skole-og-barnehage/laering-i-friluft" }
-    ]
-  }
-];
-
+// ── Basisferdigheter ──────────────────────────────────────────────────────
 function renderBasis() {
-  const container = document.getElementById("basis-kategorier");
-  if (container.children.length) return;
+  const c = document.getElementById('basis-kategorier');
+  if (c.children.length) return;
   basisKategorier.forEach((kat, i) => {
-    const id = "basis-" + i;
-    const div = document.createElement("div");
-    div.className = "info-accordion";
+    const id = 'basis-' + i;
+    const div = document.createElement('div');
+    div.className = 'info-accordion';
     div.innerHTML = `
       <div class="info-acc-header" id="bh-${id}" onclick="toggleInfo('${id}')">
-        <div class="info-acc-left">
-          <span class="info-acc-icon">${kat.icon}</span>
-          <span class="info-acc-title">${kat.tittel}</span>
-        </div>
-        <svg class="chevron" id="bc-${id}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="6 9 12 15 18 9"></polyline>
-        </svg>
+        <div class="info-acc-left"><span class="info-acc-icon">${kat.icon}</span><span class="info-acc-title">${kat.tittel}</span></div>
+        <svg class="chevron" id="bc-${id}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
       </div>
       <div class="info-acc-body" id="bb-${id}">
-        <ul class="info-list basis">
-          ${kat.punkter.map(p => `<li><span class="dot">●</span><span>${p}</span></li>`).join("")}
-        </ul>
-        ${kat.tips ? `<div class="basis-tip"><strong>${kat.tips.tittel}</strong>${kat.tips.tekst}</div>` : ""}
-        ${kat.ressurser && kat.ressurser.length ? `
-          <div class="ressurs-seksjon">
-            <div class="ressurs-label">Lær mer</div>
-            <div class="ressurs-lenker">
-              ${kat.ressurser.map(r => `
-                <a href="${r.url}" target="_blank" rel="noopener" class="ressurs-btn ${r.type === 'yt' ? 'ressurs-btn-yt' : 'ressurs-btn-web'}">
-                  ${r.type === 'yt' ? '▶ ' : '🔗 '}${r.tekst}
-                </a>`).join("")}
-            </div>
-          </div>` : ""}
+        <ul class="info-list basis">${kat.punkter.map(p => `<li><span class="dot">●</span><span>${p}</span></li>`).join('')}</ul>
+        ${kat.tips ? `<div class="basis-tip"><strong>${kat.tips.tittel}</strong>${kat.tips.tekst}</div>` : ''}
+        ${kat.ressurser && kat.ressurser.length ? `<div class="ressurs-seksjon"><div class="ressurs-label">Lær mer</div><div class="ressurs-lenker">${kat.ressurser.map(r => `<a href="${r.url}" target="_blank" rel="noopener" class="ressurs-btn ${r.type==='yt'?'ressurs-btn-yt':'ressurs-btn-web'}">${r.type==='yt'?'▶ ':'🔗 '}${r.tekst}</a>`).join('')}</div></div>` : ''}
       </div>`;
-    container.appendChild(div);
+    c.appendChild(div);
   });
 }
 
 function toggleInfo(id) {
-  const body = document.getElementById("bb-" + id);
-  const chev = document.getElementById("bc-" + id);
-  const header = document.getElementById("bh-" + id);
-  const open = body.classList.toggle("open");
-  chev.classList.toggle("open", open);
-  header.classList.toggle("open", open);
+  const body = document.getElementById('bb-' + id);
+  const chev = document.getElementById('bc-' + id);
+  const head = document.getElementById('bh-' + id);
+  const open = body.classList.toggle('open');
+  chev.classList.toggle('open', open);
+  head.classList.toggle('open', open);
 }
 
-// ── Render voksenspørsmål ─────────────────────────────────────────────────
+// ── For voksne + Egenvurdering ────────────────────────────────────────────
+function updateEvProgress() {
+  const total = voksneKategorier.reduce((s, k) => s + k.sporsmal.length, 0);
+  const done  = evChecked.length;
+  const pct   = Math.round((done / total) * 100);
+  const el    = document.getElementById('ev-progress-container');
+  if (el) el.innerHTML = `
+    <div class="ev-progress">
+      <div class="ev-progress-label">Din egenvurdering</div>
+      <div class="ev-progress-bar"><div class="ev-progress-fill" style="width:${pct}%"></div></div>
+      <div class="ev-progress-text">${done} av ${total} spørsmål reflektert over</div>
+    </div>`;
+}
 
 function renderVoksne() {
-  const container = document.getElementById("voksne-categories");
-  if (container.children.length) return; // allerede rendret
+  const cats = document.getElementById('voksne-categories');
+  if (cats.children.length) { updateEvProgress(); return; }
+  updateEvProgress();
 
   let nr = 1;
   voksneKategorier.forEach(kat => {
-    const section = document.createElement("div");
-    section.className = "voksne-category";
-
-    const heading = document.createElement("div");
-    heading.className = "voksne-category-heading";
-    heading.textContent = kat.tittel;
-    section.appendChild(heading);
+    const section = document.createElement('div');
+    section.className = 'voksne-category';
+    const h = document.createElement('div');
+    h.className = 'voksne-category-heading';
+    h.textContent = kat.tittel;
+    section.appendChild(h);
 
     kat.sporsmal.forEach(sp => {
-      const card = document.createElement("div");
-      card.className = "vq-card";
+      const idx = nr - 1;
+      const key = 'q_' + idx;
+      const checked = evChecked.includes(key);
+      const card = document.createElement('div');
+      card.className = 'ev-card';
       card.innerHTML = `
-        <div class="vq-num">${nr}</div>
-        <div class="vq-body">
-          <div class="vq-question">${sp.tekst}</div>
-          <div class="vq-source">${sp.kilde}</div>
+        <div class="ev-check ${checked ? 'checked' : ''}" id="evcheck-${idx}">${checked ? '✓' : ''}</div>
+        <div class="ev-body">
+          <div class="ev-question">${sp.tekst}</div>
+          <div class="ev-source">${sp.kilde}</div>
         </div>`;
+      card.onclick = () => {
+        if (evChecked.includes(key)) evChecked = evChecked.filter(k => k !== key);
+        else evChecked.push(key);
+        localStorage.setItem('nhb_ev', JSON.stringify(evChecked));
+        const chk = document.getElementById('evcheck-' + idx);
+        const isNowChecked = evChecked.includes(key);
+        chk.className = 'ev-check' + (isNowChecked ? ' checked' : '');
+        chk.textContent = isNowChecked ? '✓' : '';
+        updateEvProgress();
+      };
       section.appendChild(card);
       nr++;
     });
-    container.appendChild(section);
+    cats.appendChild(section);
   });
 }
 
-// ── Filter ────────────────────────────────────────────────────────────────
+// ── View management ───────────────────────────────────────────────────────
+const views = {
+  voksne:     document.getElementById('voksne-view'),
+  rammeplan:  document.getElementById('rammeplan-view'),
+  basis:      document.getElementById('basis-view'),
+  inspirasjon:document.getElementById('inspirasjon-view')
+};
+const activityViews = ['alle','1-2','3-6','inne','skog','favoritter'];
+const searchBar     = document.getElementById('search-bar');
+const rpTagBar      = document.getElementById('rp-tag-bar');
 
-const voksneView     = document.getElementById("voksne-view");
-const rammeplaneView = document.getElementById("rammeplan-view");
-const basisView      = document.getElementById("basis-view");
-const inspView       = document.getElementById("inspirasjon-view");
+function setFilter(filter) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b.dataset.filter === filter));
+  activeFilter = filter;
 
-const allViews = [voksneView, rammeplaneView, basisView, inspView];
+  Object.values(views).forEach(v => v.style.display = 'none');
+  listEl.classList.add('hidden');
+  emptyMsg.classList.add('hidden');
 
-function hideAllViews() {
-  allViews.forEach(v => v.style.display = "none");
-  listEl.classList.add("hidden");
-  emptyMsg.classList.add("hidden");
+  const isActivity = activityViews.includes(filter);
+  searchBar.style.display = isActivity ? '' : 'none';
+  rpTagBar.style.display  = isActivity ? '' : 'none';
+
+  if (filter === 'voksne') {
+    views.voksne.style.display = 'block'; renderVoksne();
+  } else if (filter === 'rammeplan') {
+    views.rammeplan.style.display = 'block'; renderRammeplan();
+  } else if (filter === 'basis') {
+    views.basis.style.display = 'block'; renderBasis();
+  } else if (filter === 'inspirasjon') {
+    views.inspirasjon.style.display = 'block';
+  } else {
+    listEl.classList.remove('hidden');
+    renderActivities(filter);
+  }
 }
 
-document.querySelectorAll(".filter-btn").forEach(btn => {
-  btn.addEventListener("click", () => {
-    document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-    const filter = btn.dataset.filter;
-
-    if (filter === "voksne") {
-      hideAllViews();
-      voksneView.style.display = "block";
-      renderVoksne();
-    } else if (filter === "rammeplan") {
-      hideAllViews();
-      rammeplaneView.style.display = "block";
-      renderRammeplan();
-    } else if (filter === "basis") {
-      hideAllViews();
-      basisView.style.display = "block";
-      renderBasis();
-    } else if (filter === "inspirasjon") {
-      hideAllViews();
-      inspView.style.display = "block";
-    } else {
-      allViews.forEach(v => v.style.display = "none");
-      listEl.classList.remove("hidden");
-      renderActivities(filter);
-    }
-  });
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => setFilter(btn.dataset.filter));
 });
 
-renderActivities("alle");
+// ── Search ────────────────────────────────────────────────────────────────
+document.getElementById('search-input').addEventListener('input', e => {
+  searchQuery = e.target.value.toLowerCase().trim();
+  renderActivities(activeFilter);
+});
+
+// ── Init ──────────────────────────────────────────────────────────────────
+buildRpTagBar();
+setFilter('alle');
+
+// ── PWA ───────────────────────────────────────────────────────────────────
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+}
 </script>
 </body>
 </html>
