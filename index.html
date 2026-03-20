@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Fysiske aktiviteter – Barnehage</title>
+  <title>Natur, helse og bevegelse</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -144,6 +144,32 @@
     .tag-inne { background: #e0eaff; color: #2a4db5; }
     .tag-skog { background: #d4edda; color: #1a5c2e; }
 
+    .rammeplan-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 14px;
+    }
+    .tag-rp {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      padding: 3px 9px;
+      border-radius: 20px;
+      background: #f3eeff;
+      color: #5c35a8;
+      border: 1px solid #ddd0f7;
+    }
+    .rp-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #5c35a8;
+      margin-top: 14px;
+      display: block;
+    }
+
     .chevron {
       width: 20px;
       height: 20px;
@@ -201,6 +227,33 @@
       color: #2e7d5e;
       flex-shrink: 0;
       min-width: 18px;
+    }
+
+    .video-wrapper {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+      border-radius: 10px;
+      margin-top: 16px;
+      background: #000;
+    }
+    .video-wrapper iframe {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      border: none;
+      border-radius: 10px;
+    }
+
+    .video-placeholder {
+      margin-top: 16px;
+      border: 2px dashed #d0e8dc;
+      border-radius: 10px;
+      padding: 14px;
+      text-align: center;
+      color: #aaa;
+      font-size: 0.82rem;
     }
 
     .hidden { display: none !important; }
@@ -288,7 +341,7 @@
 <body>
 
 <header>
-  <h1>Fysiske aktiviteter</h1>
+  <h1>Natur, helse og bevegelse</h1>
   <p>Trykk på en aktivitet for å se beskrivelse og spørsmål</p>
 </header>
 
@@ -326,6 +379,7 @@ const activities = [
   {
     icon: "🛏️",
     name: "Pute-klatrefjell",
+    video: null,
     age: "1-2", sted: "inne",
     description:
       "Stable tre–fire puter og en liten madrass til et lite «fjell» på gulvet. La barna klatre opp, sette seg på toppen og rulle eller gli ned. Vær tett på og sikre at underlaget er mykt. Aktiviteten styrker grovmotorikk, kjernemuskulatur og romlig forståelse.",
@@ -678,6 +732,49 @@ const voksneKategorier = [
   }
 ];
 
+// ── Rammeplan-tags ────────────────────────────────────────────────────────
+
+const rammeplantags = {
+  "Pute-klatrefjell":          ["Bevegelsesglede", "Motoriske ferdigheter", "Kroppsbevissthet"],
+  "Kryp under broen":          ["Motoriske ferdigheter", "Bevegelsesglede", "Kroppsbevissthet"],
+  "Dans med skjerf":           ["Bevegelsesglede", "Motoriske ferdigheter", "Selvbilde"],
+  "Rull ballen til hverandre": ["Motoriske ferdigheter", "Bevegelsesglede"],
+  "Ormeløp på madrass":        ["Motoriske ferdigheter", "Bevegelsesglede", "Kroppsbevissthet"],
+  "Trampe på løv":             ["Bevegelsesglede", "Kroppsbevissthet"],
+  "Steinesamling":             ["Motoriske ferdigheter", "Bevegelsesglede"],
+  "Plaske i sølepytter":       ["Bevegelsesglede", "Kroppsbevissthet"],
+  "Gå på ujevnt underlag":     ["Motoriske ferdigheter", "Risikomestring", "Bevegelsesglede"],
+  "Bær pakken din":            ["Motoriske ferdigheter", "Bevegelsesglede", "Selvbilde"],
+  "Hinderløype innendørs":     ["Motoriske ferdigheter", "Risikomestring", "Bevegelsesglede"],
+  "Putebroen":                 ["Motoriske ferdigheter", "Risikomestring", "Bevegelsesglede"],
+  "Stolsdansen":               ["Bevegelsesglede", "Selvbilde", "Grenser"],
+  "Akrobat-stafett":           ["Motoriske ferdigheter", "Bevegelsesglede", "Selvbilde"],
+  "Bygg en hule":              ["Motoriske ferdigheter", "Bevegelsesglede"],
+  "Skogsstafett":              ["Motoriske ferdigheter", "Bevegelsesglede", "Risikomestring"],
+  "Balansegang i skogen":      ["Motoriske ferdigheter", "Risikomestring", "Kroppsbevissthet"],
+  "Bygg hytte av kvister":     ["Bevegelsesglede", "Motoriske ferdigheter"],
+  "Naturdetektiv-skattejakt":  ["Bevegelsesglede", "Motoriske ferdigheter"],
+  "Dyreleken i skogen":        ["Bevegelsesglede", "Motoriske ferdigheter", "Kroppsbevissthet"]
+};
+
+// ── YouTube-hjelper ───────────────────────────────────────────────────────
+
+function getYouTubeId(url) {
+  if (!url) return null;
+  const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([A-Za-z0-9_-]{11})/);
+  return match ? match[1] : null;
+}
+
+function videoHtml(videoUrl) {
+  const id = getYouTubeId(videoUrl);
+  if (id) {
+    return `<div class="video-wrapper">
+      <iframe src="https://www.youtube.com/embed/${id}" allowfullscreen loading="lazy"></iframe>
+    </div>`;
+  }
+  return `<div class="video-placeholder">Video ikke lagt til ennå</div>`;
+}
+
 // ── Render aktiviteter ────────────────────────────────────────────────────
 
 const listEl   = document.getElementById("activity-list");
@@ -728,6 +825,12 @@ function renderActivities(filter) {
         </div>
         <div class="card-body" id="body-${uid}">
           <p class="description">${activity.description}</p>
+          ${(rammeplantags[activity.name] || []).length ? `
+            <span class="rp-label">Rammeplan – kropp, bevegelse, mat og helse</span>
+            <div class="rammeplan-tags">
+              ${(rammeplantags[activity.name] || []).map(t => `<span class="tag-rp">${t}</span>`).join("")}
+            </div>` : ""}
+          ${videoHtml(activity.video || null)}
           <div class="questions-heading">Didaktiske refleksjonsspørsmål</div>
           <ul class="questions-list">
             ${activity.questions.map((q, i) =>
