@@ -567,6 +567,82 @@
       -webkit-tap-highlight-color: transparent;
     }
     .featured-video-btn:active { opacity: 0.85; }
+
+    /* ── Inspirasjon ─────────────────────────────── */
+
+    #inspirasjon-view { display: none; }
+
+    .insp-card {
+      background: white;
+      border-radius: 14px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      overflow: hidden;
+    }
+    .insp-card-body { padding: 16px 16px 18px; }
+    .insp-type-row {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin-bottom: 8px;
+    }
+    .insp-badge {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 3px 9px;
+      border-radius: 20px;
+    }
+    .badge-yt       { background: #fee2e2; color: #b91c1c; }
+    .badge-ig       { background: #fce7f3; color: #9d174d; }
+    .badge-web      { background: #e0f2fe; color: #0369a1; }
+    .badge-rp       { background: #f3e8ff; color: #6d28d9; }
+
+    .insp-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 5px;
+      line-height: 1.35;
+    }
+    .insp-desc {
+      font-size: 0.85rem;
+      color: #555;
+      line-height: 1.55;
+      margin-bottom: 14px;
+    }
+    .insp-link-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #2e7d5e;
+      background: #f0f7f4;
+      padding: 8px 16px;
+      border-radius: 30px;
+      text-decoration: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .insp-link-btn:active { opacity: 0.75; }
+
+    .insp-embed {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+      background: #000;
+    }
+    .insp-embed iframe {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      border: none;
+    }
+
+    .filter-btn-insp { border-color: #6ee7b7; color: #6ee7b7; }
+    .filter-btn-insp.active { background: #6ee7b7; color: #1a1a1a; border-color: #6ee7b7; }
   </style>
 </head>
 <body>
@@ -586,6 +662,7 @@
   <button class="filter-btn filter-btn-voksne" data-filter="voksne">For voksne</button>
   <button class="filter-btn filter-btn-rp" data-filter="rammeplan">Rammeplan</button>
   <button class="filter-btn filter-btn-basis" data-filter="basis">Basisferdigheter</button>
+  <button class="filter-btn filter-btn-insp" data-filter="inspirasjon">Inspirasjon</button>
 </div>
 
 <main>
@@ -646,6 +723,58 @@
       <p>Grunnleggende ferdigheter for å gjennomføre gode og trygge turer, lage mat ute og mestre naturen med barn.</p>
     </div>
     <div id="basis-kategorier"></div>
+  </div>
+
+  <!-- ── Inspirasjon-view ── -->
+  <div id="inspirasjon-view">
+    <div class="info-intro">
+      <div class="info-intro-label">Samlede ressurser</div>
+      <h2>Inspirasjon</h2>
+      <p>Videoer, fortellinger og faglige ressurser som kan inspirere arbeidet med natur, helse og bevegelse i barnehagen.</p>
+    </div>
+
+    <!-- YouTube: Natur og friluftsliv i barnehagen -->
+    <div class="insp-card">
+      <div class="insp-embed">
+        <iframe src="https://www.youtube.com/embed/EuWvM1JufSM" allowfullscreen loading="lazy"></iframe>
+      </div>
+      <div class="insp-card-body">
+        <div class="insp-type-row"><span class="insp-badge badge-yt">YouTube</span></div>
+        <div class="insp-title">Natur og friluftsliv i barnehagen</div>
+        <div class="insp-desc">Video som viser hvordan barnehagen kan jobbe med natur og friluftsliv som pedagogisk arena – med barn i fokus.</div>
+        <a href="https://www.youtube.com/watch?v=EuWvM1JufSM" target="_blank" rel="noopener" class="insp-link-btn">▶ Åpne på YouTube</a>
+      </div>
+    </div>
+
+    <!-- Instagram -->
+    <div class="insp-card">
+      <div class="insp-card-body">
+        <div class="insp-type-row"><span class="insp-badge badge-ig">Instagram</span></div>
+        <div class="insp-title">Inspirasjonsreel – fysisk aktivitet</div>
+        <div class="insp-desc">En inspirasjonsreel fra Instagram som viser fysisk aktivitet og naturlek i praksis.</div>
+        <a href="https://www.instagram.com/reel/DPYpO7OiNEO/" target="_blank" rel="noopener" class="insp-link-btn">↗ Se på Instagram</a>
+      </div>
+    </div>
+
+    <!-- PBL -->
+    <div class="insp-card">
+      <div class="insp-card-body">
+        <div class="insp-type-row"><span class="insp-badge badge-web">Fortelling</span></div>
+        <div class="insp-title">Sør-Beitstad barnehage – natur og friluftsliv i praksis</div>
+        <div class="insp-desc">PBLs portrett av en barnehage i Steinkjer som jobber aktivt med natur, utelek, mat og barnas følelsesliv. Inspirerende eksempel på pedagogikk i praksis.</div>
+        <a href="https://www.pbl.no/sider/fortellinger-fra-barnehagen/sor-beitstad-barnehage/" target="_blank" rel="noopener" class="insp-link-btn">↗ Les fortellingen</a>
+      </div>
+    </div>
+
+    <!-- Udir -->
+    <div class="insp-card">
+      <div class="insp-card-body">
+        <div class="insp-type-row"><span class="insp-badge badge-rp">Rammeplan</span></div>
+        <div class="insp-title">Kropp, bevegelse, mat og helse – Udir</div>
+        <div class="insp-desc">Utdanningsdirektoratets offisielle side for fagområdet. Gir oversikt over mål, hva barna skal lære og personalets ansvar – direkte fra Rammeplanen.</div>
+        <a href="https://www.udir.no/laring-og-trivsel/rammeplan-for-barnehagen/fagomrader/kropp-bevegelse-mat-helse/" target="_blank" rel="noopener" class="insp-link-btn">↗ Les på Udir</a>
+      </div>
+    </div>
   </div>
 </main>
 
@@ -1358,11 +1487,12 @@ function renderVoksne() {
 
 // ── Filter ────────────────────────────────────────────────────────────────
 
-const voksneView    = document.getElementById("voksne-view");
+const voksneView     = document.getElementById("voksne-view");
 const rammeplaneView = document.getElementById("rammeplan-view");
-const basisView     = document.getElementById("basis-view");
+const basisView      = document.getElementById("basis-view");
+const inspView       = document.getElementById("inspirasjon-view");
 
-const allViews = [voksneView, rammeplaneView, basisView];
+const allViews = [voksneView, rammeplaneView, basisView, inspView];
 
 function hideAllViews() {
   allViews.forEach(v => v.style.display = "none");
@@ -1388,6 +1518,9 @@ document.querySelectorAll(".filter-btn").forEach(btn => {
       hideAllViews();
       basisView.style.display = "block";
       renderBasis();
+    } else if (filter === "inspirasjon") {
+      hideAllViews();
+      inspView.style.display = "block";
     } else {
       allViews.forEach(v => v.style.display = "none");
       listEl.classList.remove("hidden");
