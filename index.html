@@ -336,6 +336,154 @@
       color: #999;
       font-style: italic;
     }
+
+    /* ── Rammeplan & Basisferdigheter ────────────── */
+
+    #rammeplan-view, #basis-view { display: none; }
+
+    .info-intro {
+      background: white;
+      border-radius: 14px;
+      padding: 18px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    }
+    .info-intro-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: #2e7d5e;
+      margin-bottom: 6px;
+    }
+    .info-intro h2 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 8px;
+    }
+    .info-intro p {
+      font-size: 0.9rem;
+      line-height: 1.65;
+      color: #555;
+    }
+    .info-intro blockquote {
+      border-left: 3px solid #2e7d5e;
+      margin: 10px 0 0;
+      padding-left: 12px;
+      font-style: italic;
+      font-size: 0.9rem;
+      color: #444;
+    }
+
+    .info-section { margin-bottom: 24px; }
+    .info-section-heading {
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: #2e7d5e;
+      margin-bottom: 12px;
+      padding-left: 2px;
+    }
+
+    .kv-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+    .kv-card {
+      background: white;
+      border-radius: 12px;
+      padding: 14px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+      text-align: center;
+    }
+    .kv-icon { font-size: 1.6rem; }
+    .kv-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-top: 6px;
+      color: #1a1a1a;
+    }
+    .kv-desc {
+      font-size: 0.78rem;
+      color: #666;
+      line-height: 1.45;
+      margin-top: 4px;
+    }
+
+    .info-accordion { margin-bottom: 10px; }
+    .info-acc-header {
+      background: white;
+      border-radius: 12px;
+      padding: 14px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      gap: 10px;
+    }
+    .info-acc-header:active { background: #f8f8f8; }
+    .info-acc-left { display: flex; align-items: center; gap: 10px; }
+    .info-acc-icon { font-size: 1.4rem; flex-shrink: 0; }
+    .info-acc-title { font-size: 0.97rem; font-weight: 600; color: #1a1a1a; }
+    .info-acc-body {
+      display: none;
+      background: white;
+      border-radius: 0 0 12px 12px;
+      padding: 0 16px 16px;
+      margin-top: -6px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.06);
+    }
+    .info-acc-body.open { display: block; }
+    .info-acc-header.open { border-radius: 12px 12px 0 0; box-shadow: 0 2px 0 rgba(0,0,0,0.04); }
+
+    .info-list {
+      list-style: none;
+      margin-top: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .info-list li {
+      display: flex;
+      gap: 10px;
+      font-size: 0.88rem;
+      line-height: 1.55;
+      color: #333;
+      padding: 10px 12px;
+      background: #f0f7f4;
+      border-radius: 8px;
+    }
+    .info-list li .dot {
+      color: #2e7d5e;
+      font-weight: 900;
+      flex-shrink: 0;
+    }
+    .info-list.basis li { background: #fff7ed; }
+    .info-list.basis li .dot { color: #e07000; }
+
+    .basis-tip {
+      margin-top: 12px;
+      background: #fff3cd;
+      border-radius: 8px;
+      padding: 10px 13px;
+      font-size: 0.83rem;
+      color: #856404;
+      line-height: 1.5;
+    }
+    .basis-tip strong { display: block; margin-bottom: 2px; }
+
+    .filter-btn-rp { border-color: #c4b5fd; color: #c4b5fd; }
+    .filter-btn-rp.active { background: #c4b5fd; color: #1a1a1a; border-color: #c4b5fd; }
+
+    .filter-btn-basis { border-color: #fdba74; color: #fdba74; }
+    .filter-btn-basis.active { background: #fdba74; color: #1a1a1a; border-color: #fdba74; }
   </style>
 </head>
 <body>
@@ -353,6 +501,8 @@
   <button class="filter-btn" data-filter="skog">Skog</button>
   <div class="filter-divider"></div>
   <button class="filter-btn filter-btn-voksne" data-filter="voksne">For voksne</button>
+  <button class="filter-btn filter-btn-rp" data-filter="rammeplan">Rammeplan</button>
+  <button class="filter-btn filter-btn-basis" data-filter="basis">Basisferdigheter</button>
 </div>
 
 <main>
@@ -366,6 +516,46 @@
     </div>
 
     <div id="voksne-categories"></div>
+  </div>
+
+  <!-- ── Rammeplan-view ── -->
+  <div id="rammeplan-view">
+    <div class="info-intro">
+      <div class="info-intro-label">Rammeplan for barnehagen</div>
+      <h2>Kropp, bevegelse, mat og helse</h2>
+      <p>Vaner og handlingsmønstre tar form allerede fra tidlig alder. Gode vaner som tilegnes i barnehagealder, kan vare livet ut.</p>
+      <blockquote>«Barnehagen skal sikre at alle barn opplever bevegelsesglede, matglede og matkultur, mentalt og sosialt velvære og fysisk og psykisk helse.»</blockquote>
+    </div>
+
+    <div class="info-section">
+      <div class="info-section-heading">Kjerneverdier</div>
+      <div class="kv-grid">
+        <div class="kv-card"><div class="kv-icon">🏃</div><div class="kv-title">Bevegelsesglede</div><div class="kv-desc">Glede og mestring gjennom allsidig bevegelse inne og ute, hele året</div></div>
+        <div class="kv-card"><div class="kv-icon">🍎</div><div class="kv-title">Matglede</div><div class="kv-desc">Matkultur, matens opprinnelse og gleden ved å lage og spise mat sammen</div></div>
+        <div class="kv-card"><div class="kv-icon">💚</div><div class="kv-title">Mentalt velvære</div><div class="kv-desc">Sosialt fellesskap, trygghet og positiv selvoppfatning gjennom kropp og lek</div></div>
+        <div class="kv-card"><div class="kv-icon">💪</div><div class="kv-title">Fysisk helse</div><div class="kv-desc">Gode vaner for kosthold, hygiene, aktivitet og hvile fra tidlig alder</div></div>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <div class="info-section-heading">Hva barna skal oppleve og lære</div>
+      <ul class="info-list" id="rp-mal-list"></ul>
+    </div>
+
+    <div class="info-section">
+      <div class="info-section-heading">Personalets ansvar</div>
+      <ul class="info-list" id="rp-personal-list"></ul>
+    </div>
+  </div>
+
+  <!-- ── Basisferdigheter-view ── -->
+  <div id="basis-view">
+    <div class="info-intro">
+      <div class="info-intro-label">Praktisk kunnskap</div>
+      <h2>Basisferdigheter ute</h2>
+      <p>Grunnleggende ferdigheter for å gjennomføre gode og trygge turer, lage mat ute og mestre naturen med barn.</p>
+    </div>
+    <div id="basis-kategorier"></div>
   </div>
 </main>
 
@@ -851,6 +1041,160 @@ function toggleCard(uid) {
   chev.classList.toggle("open", body.classList.toggle("open"));
 }
 
+// ── Rammeplan-data ────────────────────────────────────────────────────────
+
+const rpMal = [
+  "Oppleve trivsel, glede og mestring ved allsidige bevegelseserfaringer inne og ute – hele året",
+  "Bli kjent med egne behov, få kjennskap til menneskekroppen og utvikle gode vaner for hygiene og variert kosthold",
+  "Videreutvikle motoriske ferdigheter, kroppsbeherskelse, koordinasjon og fysiske egenskaper",
+  "Oppleve å vurdere og mestre risikofylt lek gjennom kroppslige utfordringer",
+  "Bli trygge på egen kropp med positiv oppfatning av seg selv og innsikt i egne følelser",
+  "Sette grenser for egen kropp og respektere andres grenser",
+  "Få innsikt i matens opprinnelse, produksjon av matvarer og veien fra mat til måltid"
+];
+
+const rpPersonal = [
+  "Være aktive og tilstedeværende voksne – støtte og utfordre barna til variert kroppslig lek",
+  "Bidra til at barna tilegner seg gode vaner, holdninger og kunnskaper om kost, hygiene, aktivitet og hvile",
+  "Gi barna tilgang til varierte og utfordrende bevegelsesmiljøer, både inne og ute",
+  "Bidra til et bevisst forhold til retten til å bestemme over egen kropp",
+  "Legge til rette for at måltider og matlaging bidrar til måltidsglede, deltakelse, samtaler og fellesskapsfølelse",
+  "Kjenne og praktisere nasjonale føringer for helsefremmende og forebyggende tiltak som gjelder barn"
+];
+
+function renderRammeplan() {
+  const malList = document.getElementById("rp-mal-list");
+  const personalList = document.getElementById("rp-personal-list");
+  if (malList.children.length) return;
+  rpMal.forEach(t => {
+    malList.innerHTML += `<li><span class="dot">●</span><span>${t}</span></li>`;
+  });
+  rpPersonal.forEach(t => {
+    personalList.innerHTML += `<li><span class="dot">●</span><span>${t}</span></li>`;
+  });
+}
+
+// ── Basisferdigheter-data ─────────────────────────────────────────────────
+
+const basisKategorier = [
+  {
+    icon: "🥾",
+    tittel: "Turplanlegging",
+    punkter: [
+      "Tilpass rutens lengde til alderen: 1–2 år: 20–30 min gange; 3–6 år: 45–90 min",
+      "Varsle alltid noen om ruten og forventet tilbakomsttid",
+      "Tell barna jevnlig – bruk et fast tellesystem",
+      "Tilpass farten til det sakteste barnet og gi rom for stopp og undring underveis",
+      "Avtal et «stopp-sted» – et tydelig punkt alle vet de skal samles ved hvis noen blir borte",
+      "Ha med: ekstra klær, plaster, mat og vann, mobiltelefon, kart eller kjennskap til området"
+    ],
+    tips: { tittel: "Godt råd", tekst: "Gå ruten selv i forkant første gang – finn naturlige stopppunkter, vurder terreng og identifiser eventuelle farer." }
+  },
+  {
+    icon: "🔥",
+    tittel: "Bål og brannsikkerhet",
+    punkter: [
+      "Bålbrenning er forbudt i utmark 15. april–15. september – sjekk alltid lokale regler",
+      "Velg et trygt sted: unngå tørr vegetasjon, ta hensyn til vindretning",
+      "Lag et tydelig sikkerhetsområde rundt bålet – barna holder seg utenfor",
+      "Ha alltid vann eller sand klar for slukking før dere tenner",
+      "La barna delta trygt: samle kvister, stable opp – alltid med voksen tett på",
+      "Aldri la barna alene ved et tent bål – ikke engang et øyeblikk",
+      "Slukk grundig: rør rundt med pinne og vann til asken er kald og kall den trygg"
+    ],
+    tips: { tittel: "Med de minste", tekst: "For 1–2-åringer er det å se på og kjenne varmen fra trygg avstand en rik opplevelse i seg selv. Ikke press deltakelse." }
+  },
+  {
+    icon: "🍳",
+    tittel: "Matlaging ute",
+    punkter: [
+      "Sjekk allergier og diettbehov i barnegruppa før du planlegger menyen",
+      "Enkle retter fungerer best: pinnebrød, banangryte i folie, suppe på primus",
+      "Hygiene: ta med våtservietter eller håndsprit – vask hender før matlaging",
+      "Vær forsiktig med varm mat og drikke til de minste – test alltid temperaturen",
+      "La barna medvirke: forme brøddeigen, røre i gryta, pakke maten sin",
+      "Mat smaker alltid bedre ute – bruk det bevisst som motivasjon for turen"
+    ],
+    tips: { tittel: "Kobling til Rammeplan", tekst: "Matlaging ute er direkte knyttet til målet om 'innsikt i matens opprinnelse og veien fra mat til måltid' – og skaperglede." }
+  },
+  {
+    icon: "🩹",
+    tittel: "Sikkerhet og førstehjelp",
+    punkter: [
+      "Ha alltid mobiltelefon med nok batteri og nødnumrene lett tilgjengelig",
+      "Nødnumre: 113 (ambulanse) · 112 (politi) · 110 (brann)",
+      "Sår og skrubbsår: skyll godt med vann, tørk og legg plaster – ro og anerkjennelse virker",
+      "Fall og støt: vurder bevegelse og smertenivå – ring 113 ved mistanke om skade",
+      "Insektstikk: fjern brodden med neglen (ikke klyp), avkjøl med kaldt vann",
+      "Ukjente planter og bær: lær barna regelen – spiser vi aldri noe vi ikke kjenner",
+      "Kjenn barna godt: hvem har allergier, hvem er medisinert, hvem er redd for noe"
+    ],
+    tips: { tittel: "Viktig rutine", tekst: "Gå gjennom en enkel sikkerhetsbriefing med barna før hver tur: hvem vi er med, hva vi gjør hvis noen blir borte, og stopp-stedet." }
+  },
+  {
+    icon: "🧥",
+    tittel: "Klær og utstyr",
+    punkter: [
+      "Lagprinsippet: innerlag (ullundertøy) → mellomlag (fleece) → ytterlag (regntøy/vindtett)",
+      "«Det finnes ikke dårlig vær – bare dårlig klær»: god påkledning gjør turen god",
+      "Skift alltid til tørt tøy etter lek i vann, søle eller snø",
+      "Ha alltid et ekstra sett klær i sekken per barn – spesielt til 1–3-åringer",
+      "Sommer: solkrem (minimum SPF 30) og solhatt er obligatorisk på solrike dager",
+      "Skotøy: gummistøvler for sølete dager, støvler med god støtte og gummisåle for skog og terreng"
+    ],
+    tips: { tittel: "Praktisk tips", tekst: "Merk alltid barneklærne tydelig med navn – spesielt ekstrasettene. Det sparer mye tid og frustrasjon." }
+  },
+  {
+    icon: "🌿",
+    tittel: "Naturkunnskap med barn",
+    punkter: [
+      "Lær barna noen få, gjenkjennelige treslag: bjørk, gran, furu – start enkelt",
+      "Årstidene som pedagogikk: følg naturens forandringer gjennom hele året",
+      "Spor og tegn: se etter fotavtrykk, gnag på kongler, reir og hull i trær",
+      "Edderkopper og insekter er ikke farlige – normaliser nysgjerrighet fremfor frykt",
+      "Bruk sansene aktivt: lukt på jord og mose, kjenn på bark, lytt etter fugler",
+      "La barna styre utforskningen – følg barnas nysgjerrighet fremfor egne planer"
+    ],
+    tips: { tittel: "Kobling til Rammeplan", tekst: "Naturkunnskap er bro mellom fagområdene Natur, miljø og teknologi og Kropp, bevegelse, mat og helse." }
+  }
+];
+
+function renderBasis() {
+  const container = document.getElementById("basis-kategorier");
+  if (container.children.length) return;
+  basisKategorier.forEach((kat, i) => {
+    const id = "basis-" + i;
+    const div = document.createElement("div");
+    div.className = "info-accordion";
+    div.innerHTML = `
+      <div class="info-acc-header" id="bh-${id}" onclick="toggleInfo('${id}')">
+        <div class="info-acc-left">
+          <span class="info-acc-icon">${kat.icon}</span>
+          <span class="info-acc-title">${kat.tittel}</span>
+        </div>
+        <svg class="chevron" id="bc-${id}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </div>
+      <div class="info-acc-body" id="bb-${id}">
+        <ul class="info-list basis">
+          ${kat.punkter.map(p => `<li><span class="dot">●</span><span>${p}</span></li>`).join("")}
+        </ul>
+        ${kat.tips ? `<div class="basis-tip"><strong>${kat.tips.tittel}</strong>${kat.tips.tekst}</div>` : ""}
+      </div>`;
+    container.appendChild(div);
+  });
+}
+
+function toggleInfo(id) {
+  const body = document.getElementById("bb-" + id);
+  const chev = document.getElementById("bc-" + id);
+  const header = document.getElementById("bh-" + id);
+  const open = body.classList.toggle("open");
+  chev.classList.toggle("open", open);
+  header.classList.toggle("open", open);
+}
+
 // ── Render voksenspørsmål ─────────────────────────────────────────────────
 
 function renderVoksne() {
@@ -885,7 +1229,17 @@ function renderVoksne() {
 
 // ── Filter ────────────────────────────────────────────────────────────────
 
-const voksneView = document.getElementById("voksne-view");
+const voksneView    = document.getElementById("voksne-view");
+const rammeplaneView = document.getElementById("rammeplan-view");
+const basisView     = document.getElementById("basis-view");
+
+const allViews = [voksneView, rammeplaneView, basisView];
+
+function hideAllViews() {
+  allViews.forEach(v => v.style.display = "none");
+  listEl.classList.add("hidden");
+  emptyMsg.classList.add("hidden");
+}
 
 document.querySelectorAll(".filter-btn").forEach(btn => {
   btn.addEventListener("click", () => {
@@ -894,12 +1248,19 @@ document.querySelectorAll(".filter-btn").forEach(btn => {
     const filter = btn.dataset.filter;
 
     if (filter === "voksne") {
-      listEl.classList.add("hidden");
-      emptyMsg.classList.add("hidden");
+      hideAllViews();
       voksneView.style.display = "block";
       renderVoksne();
+    } else if (filter === "rammeplan") {
+      hideAllViews();
+      rammeplaneView.style.display = "block";
+      renderRammeplan();
+    } else if (filter === "basis") {
+      hideAllViews();
+      basisView.style.display = "block";
+      renderBasis();
     } else {
-      voksneView.style.display = "none";
+      allViews.forEach(v => v.style.display = "none");
       listEl.classList.remove("hidden");
       renderActivities(filter);
     }
