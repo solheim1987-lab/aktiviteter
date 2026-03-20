@@ -524,6 +524,49 @@
 
     .filter-btn-basis { border-color: #fdba74; color: #fdba74; }
     .filter-btn-basis.active { background: #fdba74; color: #1a1a1a; border-color: #fdba74; }
+
+    .featured-video-card {
+      background: linear-gradient(135deg, #1a3a2a 0%, #2e7d5e 100%);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 24px;
+      color: white;
+      box-shadow: 0 4px 16px rgba(46,125,94,0.3);
+    }
+    .featured-video-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      opacity: 0.75;
+      margin-bottom: 8px;
+    }
+    .featured-video-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      line-height: 1.35;
+      margin-bottom: 6px;
+    }
+    .featured-video-meta {
+      font-size: 0.82rem;
+      opacity: 0.8;
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+    .featured-video-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: white;
+      color: #1a3a2a;
+      font-size: 0.9rem;
+      font-weight: 700;
+      padding: 10px 20px;
+      border-radius: 30px;
+      text-decoration: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .featured-video-btn:active { opacity: 0.85; }
   </style>
 </head>
 <body>
@@ -590,6 +633,13 @@
 
   <!-- ── Basisferdigheter-view ── -->
   <div id="basis-view">
+    <a href="https://film.oslomet.no/naturglede-og-friluftsliv-i" target="_blank" rel="noopener" class="featured-video-card" style="display:block;text-decoration:none;">
+      <div class="featured-video-label">▶ Anbefalt video · OsloMet · 7 min</div>
+      <div class="featured-video-title">Naturglede og friluftsliv i barnehagen</div>
+      <div class="featured-video-meta">Henrik Neegaard, førsteamanuensis i barnehagelærerutdanning, viser hvordan naturen beriker det pedagogiske arbeidet i barnehagen.</div>
+      <span class="featured-video-btn">▶ Se video</span>
+    </a>
+
     <div class="info-intro">
       <div class="info-intro-label">Praktisk kunnskap</div>
       <h2>Basisferdigheter ute</h2>
