@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fysiske aktiviteter – Barnehage</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f0f7f4;
+      color: #1a1a1a;
+      min-height: 100vh;
+    }
+
+    header {
+      background: #2e7d5e;
+      color: white;
+      padding: 20px 16px 16px;
+      text-align: center;
+    }
+    header h1 { font-size: 1.4rem; font-weight: 700; }
+    header p { margin-top: 4px; font-size: 0.88rem; opacity: 0.85; }
+
+    .filter-bar {
+      background: #2e7d5e;
+      padding: 0 16px 16px;
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .filter-btn {
+      border: 2px solid rgba(255,255,255,0.5);
+      background: transparent;
+      color: white;
+      border-radius: 30px;
+      padding: 7px 18px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.18s, border-color 0.18s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .filter-btn.active {
+      background: white;
+      color: #2e7d5e;
+      border-color: white;
+    }
+
+    .filter-divider {
+      width: 1px;
+      height: 28px;
+      background: rgba(255,255,255,0.3);
+      flex-shrink: 0;
+    }
+
+    .filter-btn-voksne {
+      border-color: #ffd166;
+      color: #ffd166;
+    }
+    .filter-btn-voksne.active {
+      background: #ffd166;
+      color: #1a1a1a;
+      border-color: #ffd166;
+    }
+
+    main {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 20px 16px 48px;
+    }
+
+    /* ── Aktivitetskort ─────────────────────────── */
+
+    .age-section { margin-bottom: 8px; }
+
+    .age-heading {
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: #2e7d5e;
+      margin-bottom: 12px;
+      padding-left: 4px;
+    }
+
+    .activity-card {
+      background: white;
+      border-radius: 14px;
+      margin-bottom: 14px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      overflow: hidden;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 16px 14px;
+      cursor: pointer;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      gap: 10px;
+    }
+    .card-header:active { background: #f8f8f8; }
+
+    .card-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .card-icon { font-size: 1.8rem; flex-shrink: 0; }
+
+    .card-name {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+
+    .tag-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 5px;
+    }
+
+    .tag {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 20px;
+    }
+    .tag-age  { background: #fff3cd; color: #856404; }
+    .tag-inne { background: #e0eaff; color: #2a4db5; }
+    .tag-skog { background: #d4edda; color: #1a5c2e; }
+
+    .chevron {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+      color: #aaa;
+      transition: transform 0.25s ease;
+    }
+    .chevron.open { transform: rotate(180deg); }
+
+    .card-body {
+      display: none;
+      padding: 0 16px 20px;
+      border-top: 1px solid #f0f0f0;
+    }
+    .card-body.open { display: block; }
+
+    .description {
+      font-size: 0.93rem;
+      line-height: 1.65;
+      color: #444;
+      margin-top: 14px;
+    }
+
+    .questions-heading {
+      margin-top: 18px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #2e7d5e;
+    }
+
+    .questions-list {
+      margin-top: 10px;
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .questions-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      background: #f0f7f4;
+      border-radius: 10px;
+      padding: 11px 13px;
+      font-size: 0.88rem;
+      line-height: 1.55;
+      color: #333;
+    }
+
+    .q-num {
+      font-weight: 700;
+      color: #2e7d5e;
+      flex-shrink: 0;
+      min-width: 18px;
+    }
+
+    .hidden { display: none !important; }
+
+    .empty-msg {
+      text-align: center;
+      color: #888;
+      font-size: 0.95rem;
+      margin-top: 40px;
+    }
+
+    /* ── Voksenspørsmål ─────────────────────────── */
+
+    #voksne-view { display: none; }
+
+    .voksne-intro {
+      background: #fffbe6;
+      border-left: 4px solid #ffd166;
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-bottom: 24px;
+      font-size: 0.88rem;
+      line-height: 1.6;
+      color: #555;
+    }
+    .voksne-intro strong { color: #1a1a1a; display: block; margin-bottom: 4px; font-size: 0.93rem; }
+
+    .voksne-category {
+      margin-bottom: 28px;
+    }
+
+    .voksne-category-heading {
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: #b07d00;
+      margin-bottom: 12px;
+      padding-left: 2px;
+    }
+
+    .vq-card {
+      background: white;
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .vq-num {
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: #ffd166;
+      background: #1a1a1a;
+      border-radius: 50%;
+      width: 26px;
+      height: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .vq-body { flex: 1; }
+
+    .vq-question {
+      font-size: 0.95rem;
+      font-weight: 600;
+      line-height: 1.5;
+      color: #1a1a1a;
+    }
+
+    .vq-source {
+      margin-top: 5px;
+      font-size: 0.75rem;
+      color: #999;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Fysiske aktiviteter</h1>
+  <p>Trykk på en aktivitet for å se beskrivelse og spørsmål</p>
+</header>
+
+<div class="filter-bar">
+  <button class="filter-btn active" data-filter="alle">Alle</button>
+  <button class="filter-btn" data-filter="1-2">1–2 år</button>
+  <button class="filter-btn" data-filter="3-6">3–6 år</button>
+  <button class="filter-btn" data-filter="inne">Inne</button>
+  <button class="filter-btn" data-filter="skog">Skog</button>
+  <div class="filter-divider"></div>
+  <button class="filter-btn filter-btn-voksne" data-filter="voksne">For voksne</button>
+</div>
+
+<main>
+  <div id="activity-list"></div>
+  <p class="empty-msg hidden" id="empty-msg">Ingen aktiviteter funnet for dette filteret.</p>
+
+  <div id="voksne-view">
+    <div class="voksne-intro">
+      <strong>Didaktiske spørsmål for voksne</strong>
+      Disse spørsmålene er ment som redskaper for faglig refleksjon – i planlegging, etter aktiviteter og i personalgruppen. De er forankret i forskning på barnehagekvalitet, herunder CLASS-skalaen (Pianta m.fl.), I-TERS/ECERS-R (Harms m.fl.) og norsk rammeplan for barnehagen.
+    </div>
+
+    <div id="voksne-categories"></div>
+  </div>
+</main>
+
+<script>
+// ── Aktiviteter ────────────────────────────────────────────────────────────
+
+const activities = [
+
+  // ── 1–2 ÅR ────────────────────────────────────────────────────────────
+
+  {
+    icon: "🛏️",
+    name: "Pute-klatrefjell",
+    age: "1-2", sted: "inne",
+    description:
+      "Stable tre–fire puter og en liten madrass til et lite «fjell» på gulvet. La barna klatre opp, sette seg på toppen og rulle eller gli ned. Vær tett på og sikre at underlaget er mykt. Aktiviteten styrker grovmotorikk, kjernemuskulatur og romlig forståelse.",
+    questions: [
+      "Hva kjentes det ut som å klatre opp? Er det lett eller tungt i beina?",
+      "Hva skjer med kroppen din når du ruller ned? Hvem merker at det går fort?",
+      "Kan du vise meg én annen måte å komme ned fra toppen på?"
+    ]
+  },
+  {
+    icon: "🪑",
+    name: "Kryp under broen",
+    age: "1-2", sted: "inne",
+    description:
+      "Sett fire–seks stoler på rad med litt mellomrom. Barna krabber på alle fire under setene fra ende til ende. Øk utfordringen ved å henge et teppe over stolene slik at det blir mørkt inne. Trener krabbing, kroppskontroll og romfølelse.",
+    questions: [
+      "Hva ser du inne i tunnelen? Hva hører du?",
+      "Hva bruker du til å komme deg fremover – armer, knær, magen?",
+      "Hvordan er det å krype i mørket? Hva hjelper deg da?"
+    ]
+  },
+  {
+    icon: "🎵",
+    name: "Dans med skjerf",
+    age: "1-2", sted: "inne",
+    description:
+      "Gi hvert barn et lett, fargerikt silkeskjerf eller tørkle. Spill rolig musikk og oppmuntre barna til å svinge, vifte og bevege skjerfet i takt. Varier farten med musikken – sakte vals, så litt raskere barnesang. Fremmer rytmesans, kroppskontroll og grovmotorikk.",
+    questions: [
+      "Hvilken farge har skjerfet ditt? Hva skjer med det når du løper?",
+      "Hva gjør musikken med beina dine? Liker du rask eller sakte musikk?",
+      "Kan du gjemme ansiktet under skjerfet og så titte frem igjen?"
+    ]
+  },
+  {
+    icon: "🏀",
+    name: "Rull ballen til hverandre",
+    age: "1-2", sted: "inne",
+    description:
+      "Sett barna i par på gulvet med strakte bein og rull en stor, myk ball mellom dem. Start med kort avstand og øk gradvis. Forsøk ulike ballstørrelser. Aktiviteten trener øye–håndkoordinasjon, venting og enkel sosial samhandling.",
+    questions: [
+      "Hvordan må du sitte for at ballen ikke skal renne til siden?",
+      "Hva gjør du med hendene dine når ballen kommer mot deg?",
+      "Hva tror du skjer hvis vi bruker en mye mindre ball?"
+    ]
+  },
+  {
+    icon: "🐛",
+    name: "Ormeløp på madrass",
+    age: "1-2", sted: "inne",
+    description:
+      "Legg en liten madrass eller tykk gymnastikmatte på gulvet. Barna legger seg på magen og prøver å bevege seg fremover kun ved hjelp av armene – som en orm. Lek med det: hvem kan bevege seg uten å bruke knærne? Trener armstyrke, kroppsspenst og kreativ bevegelse.",
+    questions: [
+      "Hva bruker du for å dra deg fremover – armer, magen, tærne?",
+      "Hva synes du er vanskeligst – å komme i gang eller å holde på?",
+      "Vet du hvordan en orm beveger seg ute? Har du sett en?"
+    ]
+  },
+  {
+    icon: "🍂",
+    name: "Trampe på løv",
+    age: "1-2", sted: "skog",
+    description:
+      "Gå en tur i skogen og finn steder med mange løv. La barna stampe, hoppe og rote i løvhaugene med stor frihet. Hjelp dem å legge merke til lyden og følelsen under føttene. Enkelt, sensorisk og veldig gøy – fremmer sanseintegrasjon og grovmotorikk.",
+    questions: [
+      "Hva hører du når du tramper på løvene?",
+      "Hvilken farge har løvene? Finn et blad og si fargen!",
+      "Hva skjer med løvene når vi kaster dem opp i lufta?"
+    ]
+  },
+  {
+    icon: "🪨",
+    name: "Steinesamling",
+    age: "1-2", sted: "skog",
+    description:
+      "Gi hvert barn en liten bøtte eller pose. De skal samle steiner av ulik størrelse langs stien. Hjelp dem å sammenlikne: stor og liten, lett og tung, glatt og ru. Tøm og fyll bøttene om igjen. Trener finmotorikk, begrepsforståelse og konsentrasjon.",
+    questions: [
+      "Finn den største steinen du kan løfte! Finn den minste!",
+      "Hvordan kjennes steinen ut i hånden – glatt eller ru?",
+      "Hva tror du bor under en stor stein?"
+    ]
+  },
+  {
+    icon: "💧",
+    name: "Plaske i sølepytter",
+    age: "1-2", sted: "skog",
+    description:
+      "Med gummistøvler og regnbukse – la barna gå rett i sølepyttene! Oppmuntre dem til å trampe, hoppe og se hva som skjer med vannet og gjørmen. En rik sensorisk opplevelse som fremmer frimodighet, sensorisk bevissthet og grovmotorikk.",
+    questions: [
+      "Hva skjer med vannet når du tramper i det?",
+      "Er vannet kaldt eller varmt? Hva synes du er best?",
+      "Kan du lage en stor og en liten sprut? Hva er forskjellen?"
+    ]
+  },
+  {
+    icon: "🌿",
+    name: "Gå på ujevnt underlag",
+    age: "1-2", sted: "skog",
+    description:
+      "Ta med barna ut i skogen og la dem gå på røtter, greiner, over steiner og i mykt moseunderlag. Gå sakte, hold i hånden ved behov, og navngi det dere går på. Ujevnt underlag er utmerket balanse­trening og styrker ankler og fotsåler.",
+    questions: [
+      "Hva er vanskeligst å gå på – røtter, steiner eller mykt mose?",
+      "Hva gjør du med armene dine for å ikke falle?",
+      "Hva hører du i skogen? Stå helt stille og lytt."
+    ]
+  },
+  {
+    icon: "🎒",
+    name: "Bær pakken din",
+    age: "1-2", sted: "skog",
+    description:
+      "La hvert barn bære sin egen lille ryggsekk med et eple, en vannflaske og kanskje en leke. Gå en kort tur i skogen. Bytt mellom å bære sekken foran og bak. Gir mestringsfølelse, trener balanse og styrker kjernemuskulaturen.",
+    questions: [
+      "Hvordan kjennes det å bære sekken din? Er den tung eller lett?",
+      "Hva har du i sekken din? Kan du huske alt?",
+      "Hva ville du puttet i sekken hvis du fikk velge selv?"
+    ]
+  },
+
+  // ── 3–6 ÅR ────────────────────────────────────────────────────────────
+
+  {
+    icon: "🏔️",
+    name: "Hinderløype innendørs",
+    age: "3-6", sted: "inne",
+    description:
+      "Bygg en hinderløype med puter å hoppe mellom, en stol å kravle under, en madrass å rulle over og en balanseplanke (brett) å gå på. Barna løper løypen én og én med tidtaking. Kan gjøres som stafett i to lag. Trener koordinasjon, planlegging og utholdenhet.",
+    questions: [
+      "Hvilken hindring synes du var vanskeligst? Hva måtte du gjøre annerledes?",
+      "Hva tenkte du på for å holde balansen på planken?",
+      "Hvis du fikk lage din egen løype, hvilke hindringer ville du valgt?"
+    ]
+  },
+  {
+    icon: "🌉",
+    name: "Putebroen",
+    age: "3-6", sted: "inne",
+    description:
+      "Legg puter på rekke med litt avstand mellom dem – som en bro over et «hav». Barna må hoppe fra pute til pute uten å treffe gulvet. Gjør det vanskeligere ved å øke avstanden eller fjerne puter underveis. Trener hoppkraft, planlegging og romlig forståelse.",
+    questions: [
+      "Hvordan planlegger du neste hopp? Ser du på puten eller på beina dine?",
+      "Hva skjer i kroppen din rett før du hopper? Hva gjør armene dine?",
+      "Hvorfor tror du det er lettere å hoppe fra et høyt sted enn fra et lavt?"
+    ]
+  },
+  {
+    icon: "🪑",
+    name: "Stolsdansen",
+    age: "3-6", sted: "inne",
+    description:
+      "Klassisk stols-dans: én stol færre enn antall barn. Musikk spiller – barna danser rundt stolene. Når musikken stopper, finner alle en stol å sette seg på. Den som ikke finner plass er med og passer på musikken neste runde. Trener reaksjonsevne, romforståelse og sosiale regler.",
+    questions: [
+      "Hva gjør du for å finne en ledig stol raskt? Har du en strategi?",
+      "Hvordan kjentes det om du ikke fikk plass? Og når du fikk plass?",
+      "Hva er fair play i denne leken? Hva er det viktig at vi ikke gjør?"
+    ]
+  },
+  {
+    icon: "🤸",
+    name: "Akrobat-stafett",
+    age: "3-6", sted: "inne",
+    description:
+      "Del barna i to lag. Hvert lag har en madrass. Stafetten inneholder: én kuvending på madrassen, tre hopp på stedet, krype under to stoler og løpe tilbake. Neste på laget starter når den forrige er tilbake. Trener grovmotorikk, koordinasjon og lagfølelse.",
+    questions: [
+      "Hva er det viktigste du gjør for laget ditt i en stafett?",
+      "Hvilken del av stafetten krevde mest av kroppen din?",
+      "Hva kunne vi endret for å gjøre stafetten enda mer spennende?"
+    ]
+  },
+  {
+    icon: "🏗️",
+    name: "Bygg en hule",
+    age: "3-6", sted: "inne",
+    description:
+      "Gi barna stoler, tepper, puter og klesklyper. Oppgaven er å bygge en hule de kan krype inn i og sitte i. De planlegger, forhandler og bygger sammen. Etterpå leser dere en bok eller spiser matpakken inne i hulen. Fremmer kreativitet, samarbeid og finmotorikk.",
+    questions: [
+      "Hvordan bestemte dere hvem som skulle gjøre hva i byggingen?",
+      "Hva ville du gjort annerledes neste gang for å gjøre hulen enda bedre?",
+      "Hva tror du hule-bygging har til felles med det å bygge et ekte hus?"
+    ]
+  },
+  {
+    icon: "🌲",
+    name: "Skogsstafett",
+    age: "3-6", sted: "skog",
+    description:
+      "Merk tre–fire poster mellom trærne med fargerike band. Barna løper i lag fra post til post, henter et lite objekt (kongle, stein) og bringer det tilbake. Varier traseen: rundt trær, over en stubbe, under en gren. Trener utholdenhet, orientering og lagarbeid.",
+    questions: [
+      "Hvordan fant du veien til neste post? Hva hjalp deg å orientere deg?",
+      "Hva er lurt å gjøre for å spare krefter i et langt løp?",
+      "Hvis du var trener for laget, hva ville du sagt for å motivere dem?"
+    ]
+  },
+  {
+    icon: "🪵",
+    name: "Balansegang i skogen",
+    age: "3-6", sted: "skog",
+    description:
+      "Finn liggende stokker, store røtter og flate steiner. Barna skal balansere langs dem uten å treffe bakken. Øk vanskelighetsgraden med å be dem bære noe (en pinne, en stein) mens de balanserer. Trener balanse, konsentrasjon og kroppsbevissthet.",
+    questions: [
+      "Hva gjør du med armene dine for å holde balansen?",
+      "Hvor ser du når du balanserer – på bena, på stokkene eller rett frem?",
+      "Hva er vanskeligst: å starte, gå i midten eller avslutte? Hvorfor?"
+    ]
+  },
+  {
+    icon: "🏕️",
+    name: "Bygg hytte av kvister",
+    age: "3-6", sted: "skog",
+    description:
+      "Finn en passe stor bjørk eller furu og len lange kvister mot stammen. Fyll mellomrommene med mindre kvister, mose og løv. Jobb i grupper på tre–fire. Snakk om hvilke materialer som holder best, og test konstruksjonen ved å krype inn. Fremmer samarbeid, naturkunnskap og kreativ problemløsning.",
+    questions: [
+      "Hvilke kvister fungerte best – tynne eller tykke? Lange eller korte?",
+      "Hva ville du brukt for å tette veggene hvis det begynte å regne?",
+      "Dyr lager også hus i skogen. Hvilke dyr vet du om som gjør det?"
+    ]
+  },
+  {
+    icon: "🔍",
+    name: "Naturdetektiv-skattejakt",
+    age: "3-6", sted: "skog",
+    description:
+      "Lag kort med tegninger eller bilder: en kongle, et mosebegrodd tre, et fuglerede, en paddehat, en stein ved en bekk. Barna jobber i par for å finne alt på lista. Avslutt med å samles og dele hva de fant og hvor. Fremmer observasjonsevne, samarbeid og naturbevissthet.",
+    questions: [
+      "Hva var det vanskeligste å finne? Hvorfor tror du det gjemmer seg der?",
+      "Hva la du merke til i skogen i dag som du ikke hadde lagt merke til før?",
+      "Hva tror du ville skjedd med skogen hvis alle trærne ble borte?"
+    ]
+  },
+  {
+    icon: "🐾",
+    name: "Dyreleken i skogen",
+    age: "3-6", sted: "skog",
+    description:
+      "Læreren roper et dyr – barna beveger seg slik det dyret ville gjort: bjørn (krabbe på alle fire), frosk (hoppe), slange (krype på magen), ørn (løpe med armene ut). Bruk skogen aktivt: klatre over stokker, hoppe over bekken, gjemme seg bak et tre. Trener fantasifullt kroppsspråk og grovmotorikk.",
+    questions: [
+      "Hvilket dyr synes du var morsomst å bevege seg som? Hva gjorde det ekstra gøy?",
+      "Hva tror du hjelper dyret å bevege seg slik det gjør – klør, bein, vinger?",
+      "Hvilke av disse dyrene bor egentlig i den norske skogen?"
+    ]
+  }
+];
+
+// ── Voksenspørsmål ─────────────────────────────────────────────────────────
+
+const voksneKategorier = [
+  {
+    tittel: "Deltakelse og nærvær",
+    sporsmal: [
+      {
+        tekst: "Hvor aktive og deltakende er vi voksne i lekene – beveger vi kroppen selv, eller observerer vi fra sidelinjen?",
+        kilde: "CLASS: Emotional Support – Teacher Sensitivity & Positive Climate"
+      },
+      {
+        tekst: "Er vi sensitive for enkeltbarns signaler under aktivitet – ser vi hvem som er spent, redd, ukomfortabel eller ivrer etter mer?",
+        kilde: "CLASS: Teacher Sensitivity; Rammeplan (2017) – omsorg og trygghet"
+      },
+      {
+        tekst: "Bruker vi kroppen som modell ved å vise bevegelser selv, fremfor å bare instruere verbalt?",
+        kilde: "Storli & Hagen (2010) – voksnes rolle i fysisk lek; CLASS: Instructional Support"
+      },
+      {
+        tekst: "Smitter vår egen glede og energi over på barna – hva kommuniserer kroppsspråket og stemmen vår under aktiviteten?",
+        kilde: "CLASS: Positive Climate; Løkken (2004) – toddlernes kroppslige væremåte"
+      }
+    ]
+  },
+  {
+    tittel: "Tilpasning og inkludering",
+    sporsmal: [
+      {
+        tekst: "Tilpasser vi vanskelighetsgraden slik at alle barn – uavhengig av motorisk nivå – opplever mestring og utfordring?",
+        kilde: "ECERS-R: Motor Activities; CLASS: Regard for Student Perspectives"
+      },
+      {
+        tekst: "Reflekterer vi jevnlig over hvilke barn som sjelden deltar aktivt i fysiske aktiviteter, og hva som kan være grunnen?",
+        kilde: "I-TERS: Active Physical Play; NOU 2012:1 – til barnas beste"
+      },
+      {
+        tekst: "Er vi bevisste på å inkludere barn med ulik bakgrunn, funksjonsnivå og temperament i de fysiske aktivitetene?",
+        kilde: "Rammeplan (2017) – likeverd og inkludering; I-TERS: Space & Furnishings for Play"
+      },
+      {
+        tekst: "Gir vi barna tid nok til å prøve og feile uten at vi griper inn for raskt – og skaper vi rom for risikomestring?",
+        kilde: "Sandseter (2010) – thrilling play outdoors; CLASS: Regard for Student Perspectives"
+      }
+    ]
+  },
+  {
+    tittel: "Pedagogisk planlegging og intensjon",
+    sporsmal: [
+      {
+        tekst: "Har vi en bevisst pedagogisk intensjon bak de fysiske aktivitetene vi velger, eller er det primært aktivering og tidsbruk?",
+        kilde: "Rammeplan (2017) – kropp, bevegelse, mat og helse; Kunnskapsdepartementet (2023)"
+      },
+      {
+        tekst: "Balanserer vi voksenstyrte og barnestyrte bevegelsesaktiviteter i løpet av uken?",
+        kilde: "CLASS: Regard for Student Perspectives; Tholin (2013) – barnehagens innhold"
+      },
+      {
+        tekst: "Planlegger vi aktiviteter som stimulerer ulike motoriske kvaliteter: balanse, koordinasjon, styrke, hurtighet og romfølelse?",
+        kilde: "ECERS-R: Motor Activities; Eid & Brattenborg (2012) – fysisk aktivitet i barnehagen"
+      },
+      {
+        tekst: "Tar vi barnas egne bevegelsesinitiativ og ideer aktivt inn i planleggingen av neste aktivitet?",
+        kilde: "CLASS: Regard for Student Perspectives; Rammeplan (2017) – barns medvirkning"
+      }
+    ]
+  },
+  {
+    tittel: "Språk, samspill og scaffolding",
+    sporsmal: [
+      {
+        tekst: "Bruker vi beskrivende fagspråk knyttet til kropp og bevegelse aktivt underveis – for eksempel 'du bruker kjernemuskelen din nå' eller 'legg merke til balansen i anklene'?",
+        kilde: "CLASS: Language Modeling; Vygotsky – sonen for nærmeste utvikling"
+      },
+      {
+        tekst: "Stiller vi åpne spørsmål under aktiviteten som støtter barnas refleksjon over egne bevegelser og valg?",
+        kilde: "CLASS: Concept Development & Quality of Feedback; Dewey – learning by doing"
+      },
+      {
+        tekst: "Gir vi konkret og anerkjennende tilbakemelding som beskriver hva barnet gjør, fremfor bare generell ros som 'bra jobbet'?",
+        kilde: "CLASS: Quality of Feedback; Dweck (2006) – growth mindset"
+      },
+      {
+        tekst: "Støtter vi barna i å hjelpe og vise hverandre – legger vi til rette for jevnalderscaffolding i bevegelsesaktiviteter?",
+        kilde: "Vygotsky – proksimal utviklingssone; CLASS: Instructional Support"
+      }
+    ]
+  },
+  {
+    tittel: "Refleksjon og profesjonell utvikling",
+    sporsmal: [
+      {
+        tekst: "Dokumenterer vi barnas motoriske utvikling og bruker observasjoner aktivt som grunnlag for videre planlegging?",
+        kilde: "Rammeplan (2017) – dokumentasjon og vurdering; ECERS-R: Provisions for Parents & Staff"
+      },
+      {
+        tekst: "Drøfter vi i personalgruppen hva god kvalitet i fysisk aktivitet konkret betyr for vår barnegruppe?",
+        kilde: "CLASS: Overall Quality; Gotvassli (2013) – barnehagen som lærende organisasjon"
+      },
+      {
+        tekst: "Legger vi bevisst til rette for at barna kan ta risiko og oppleve spenning innenfor trygge rammer – eller begrenser vi aktiviteten mer enn nødvendig?",
+        kilde: "Sandseter (2010) – risky play; Helse- og omsorgsdepartementet (2019) – fysisk aktivitet"
+      },
+      {
+        tekst: "Ser vi og synliggjør vi sammenhengen mellom fysisk aktivitet og barnas trivsel, konsentrasjon og sosiale samspill resten av dagen?",
+        kilde: "Helsedirektoratet (2021) – anbefalinger om fysisk aktivitet; CLASS: Emotional Support"
+      }
+    ]
+  }
+];
+
+// ── Render aktiviteter ────────────────────────────────────────────────────
+
+const listEl   = document.getElementById("activity-list");
+const emptyMsg = document.getElementById("empty-msg");
+
+function renderActivities(filter) {
+  listEl.innerHTML = "";
+  const groups = { "1-2": activities.filter(a => a.age === "1-2"), "3-6": activities.filter(a => a.age === "3-6") };
+  let total = 0;
+
+  for (const [age, group] of Object.entries(groups)) {
+    const visible = group.filter(a => {
+      if (filter === "alle") return true;
+      if (filter === "1-2" || filter === "3-6") return a.age === filter;
+      return a.sted === filter;
+    });
+    if (!visible.length) continue;
+    total += visible.length;
+
+    const section = document.createElement("div");
+    section.className = "age-section";
+    const heading = document.createElement("div");
+    heading.className = "age-heading";
+    heading.textContent = age === "1-2" ? "1–2 år" : "3–6 år";
+    section.appendChild(heading);
+
+    visible.forEach((activity, idx) => {
+      const uid = activity.age + "-" + idx;
+      const card = document.createElement("div");
+      card.className = "activity-card";
+      const stedLabel = activity.sted === "inne" ? "Inne" : "Skog";
+      const stedClass = activity.sted === "inne" ? "tag-inne" : "tag-skog";
+      card.innerHTML = `
+        <div class="card-header" onclick="toggleCard('${uid}')">
+          <div class="card-left">
+            <span class="card-icon">${activity.icon}</span>
+            <div>
+              <div class="card-name">${activity.name}</div>
+              <div class="tag-row">
+                <span class="tag tag-age">${activity.age === "1-2" ? "1–2 år" : "3–6 år"}</span>
+                <span class="tag ${stedClass}">${stedLabel}</span>
+              </div>
+            </div>
+          </div>
+          <svg class="chevron" id="chev-${uid}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <div class="card-body" id="body-${uid}">
+          <p class="description">${activity.description}</p>
+          <div class="questions-heading">Didaktiske refleksjonsspørsmål</div>
+          <ul class="questions-list">
+            ${activity.questions.map((q, i) =>
+              `<li><span class="q-num">${i + 1}.</span><span>${q}</span></li>`
+            ).join("")}
+          </ul>
+        </div>`;
+      section.appendChild(card);
+    });
+    listEl.appendChild(section);
+  }
+  emptyMsg.classList.toggle("hidden", total > 0);
+}
+
+function toggleCard(uid) {
+  const body = document.getElementById("body-" + uid);
+  const chev = document.getElementById("chev-" + uid);
+  chev.classList.toggle("open", body.classList.toggle("open"));
+}
+
+// ── Render voksenspørsmål ─────────────────────────────────────────────────
+
+function renderVoksne() {
+  const container = document.getElementById("voksne-categories");
+  if (container.children.length) return; // allerede rendret
+
+  let nr = 1;
+  voksneKategorier.forEach(kat => {
+    const section = document.createElement("div");
+    section.className = "voksne-category";
+
+    const heading = document.createElement("div");
+    heading.className = "voksne-category-heading";
+    heading.textContent = kat.tittel;
+    section.appendChild(heading);
+
+    kat.sporsmal.forEach(sp => {
+      const card = document.createElement("div");
+      card.className = "vq-card";
+      card.innerHTML = `
+        <div class="vq-num">${nr}</div>
+        <div class="vq-body">
+          <div class="vq-question">${sp.tekst}</div>
+          <div class="vq-source">${sp.kilde}</div>
+        </div>`;
+      section.appendChild(card);
+      nr++;
+    });
+    container.appendChild(section);
+  });
+}
+
+// ── Filter ────────────────────────────────────────────────────────────────
+
+const voksneView = document.getElementById("voksne-view");
+
+document.querySelectorAll(".filter-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    const filter = btn.dataset.filter;
+
+    if (filter === "voksne") {
+      listEl.classList.add("hidden");
+      emptyMsg.classList.add("hidden");
+      voksneView.style.display = "block";
+      renderVoksne();
+    } else {
+      voksneView.style.display = "none";
+      listEl.classList.remove("hidden");
+      renderActivities(filter);
+    }
+  });
+});
+
+renderActivities("alle");
+</script>
+</body>
+</html>
